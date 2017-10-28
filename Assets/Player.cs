@@ -9,6 +9,8 @@ public class Player : MonoBehaviour {
 	public float slowCoef;
 	public float shotDelay;
 	float lastShotTime;
+
+	// 기록용
 	float lastCheckTrailTime;
 	public float trailInterval;
 	float currentTime = 0;
@@ -83,7 +85,7 @@ public class Player : MonoBehaviour {
 				transform.position = trail.Value;
 			}
 			else {
-				transform.DOMove(trail.Value, trailInterval);
+				transform.DOMove(trail.Value, trailInterval).SetEase(Ease.Linear);
 			}
 			yield return new WaitForSeconds(trailInterval);
 		}
@@ -107,9 +109,18 @@ public class Player : MonoBehaviour {
 	void Move() {
 		float speed = defaultSpeed;
 		
+		// shift키 입력시 저속이동
 		if (isSlow()) 
 			speed *= slowCoef;
-		
+
+		// 대각선으로 이동할 경우 속도 일정하게 유지
+		if ((Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.UpArrow)) ||
+			(Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.DownArrow)) ||
+			(Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.UpArrow)) ||
+			(Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.DownArrow))) {
+			speed *= 1/Mathf.Sqrt(2);
+		}
+
 		if (Input.GetKey(KeyCode.LeftArrow)) {
 			transform.position += Vector3.left * Time.deltaTime * speed;
 		}
