@@ -11,15 +11,11 @@ public class Player : MonoBehaviour {
 	float lastShotTime;
 
 	// 기록용
-	// float lastCheckTrailTime;
-	// public float trailInterval;
-	// float currentTime = 0;
 	int currentFrame = 0;
 
 	// 기록 방지를 위한 임시 변수.
 	bool isTrailOn = true;
 
-	// Dictionary<float, Vector3> moveTrails;
 	List<List<KeyCode>> moveInput;
 	List<bool> shotInput;
 	List<bool> slowInput;
@@ -53,9 +49,6 @@ public class Player : MonoBehaviour {
 	void Start () {
 		lastShotTime = 0;
 
-		// lastCheckTrailTime = 0;
-		// moveTrails = new Dictionary<float, Vector3>();
-
 		moveInput = new List<List<KeyCode>>();
 		shotInput = new List<bool>();
 		slowInput = new List<bool>();
@@ -63,11 +56,8 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		// currentTime += Time.deltaTime;
 		currentFrame += 1;
-		if (isTrailOn)
-			CheckTrail();
-
+		
 		slowInput.Add(IsSlow());
 
 		Move();
@@ -78,29 +68,8 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	// 슬로우 여부와 공격 여부도 추후 추가할 것.
-	void CheckTrail() {
-		// lastCheckTrailTime += Time.deltaTime;
-
-		// if (lastCheckTrailTime < trailInterval) return;
-
-		// moveTrails.Add(currentTime, transform.position);
-		// // Debug.Log("Time : " + currentTime + ", Pos : " + (Vector2)transform.position);
-		// lastCheckTrailTime = 0;
-	}
-
 	IEnumerator MoveByTrail() {
 		isTrailOn = false;
-
-		// foreach (var trail in moveTrails) {
-		// 	if (trail.Key == 0) {
-		// 		transform.position = trail.Value;
-		// 	}
-		// 	else {
-		// 		transform.DOMove(trail.Value, trailInterval).SetEase(Ease.Linear);
-		// 	}
-		// 	yield return new WaitForSeconds(trailInterval);
-		// }
 
 		for (int frame = 0; frame < moveInput.Count; frame++) {
 			// move
