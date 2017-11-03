@@ -2,8 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
+
+	public int maxHp = 3;
+	public GameObject hpOrb;
+	int currentHp;
+	List<Image> hpOrbImages;
+
+	public int maxBomb = 3;
+	public int initBomb = 2;
+	public GameObject bombOrb;
+	int currentBomb;
+	List<Image> bombImages;
 
 	public float defaultSpeed;
 	public float slowCoef;
@@ -36,6 +48,10 @@ public class Player : MonoBehaviour {
 		upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(sectorDelta);
 		midBullet.GetComponent<Bullet>().direction = Vector3.right;
 		lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(-sectorDelta);
+
+		upperBullet.tag = "PlayerBullet";
+		midBullet.tag = "PlayerBullet";
+		lowerBullet.tag = "PlayerBullet";
 	}
 
 	void ShotStraightStrong() {
@@ -43,6 +59,32 @@ public class Player : MonoBehaviour {
 		midBullet.GetComponent<Bullet>().direction = Vector3.right;
 
 		midBullet.transform.localScale *= 2;
+
+		midBullet.tag = "PlayerBullet";
+	}
+
+	void InitializePlayerHp() {
+		hpOrbImages = new List<Image>();
+		GameObject playerHpPanel = GameObject.Find("PlayerHpPanel");
+		currentHp = maxHp;
+		for(int i = 0; i < maxHp; i++) {
+			GameObject newHpOrb = Instantiate(hpOrb) as GameObject;
+			newHpOrb.transform.SetParent(playerHpPanel.transform);
+			newHpOrb.transform.localScale = new Vector3(1,1,1);
+			hpOrbImages.Insert(i, newHpOrb.GetComponent<Image>());
+		}
+	}
+
+	void InitializePlayerBomb() {
+		bombImages = new List<Image>();
+		GameObject playerBombPanel = GameObject.Find("PlayerBombPanel");
+		currentBomb = initBomb;
+		for(int i = 0; i < initBomb; i++) {
+			GameObject newBombOrb = Instantiate(bombOrb) as GameObject;
+			newBombOrb.transform.SetParent(playerBombPanel.transform);
+			newBombOrb.transform.localScale = new Vector3(1,1,1);
+			bombImages.Insert(i, newBombOrb.GetComponent<Image>());
+		}
 	}
 
 	// Use this for initialization
@@ -52,6 +94,9 @@ public class Player : MonoBehaviour {
 		moveInput = new List<List<KeyCode>>();
 		shotInput = new List<bool>();
 		slowInput = new List<bool>();
+
+		InitializePlayerHp();
+		InitializePlayerBomb();
 	}
 	
 	// Update is called once per frame
