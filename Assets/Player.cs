@@ -216,4 +216,18 @@ public class Player : MonoBehaviour {
 
 		moveInput.Add(inputs);
 	}
+
+	public void Damaged() {
+		currentHp -= 1;
+		UpdatePlayerHpUI();
+	}
+
+	void UpdatePlayerHpUI() {
+		for (int i = 0; i < currentHp; i++) {
+			hpOrbImages[i].enabled = true;
+		}
+		for (int i = currentHp; i < maxHp; i++) {
+			hpOrbImages[i].enabled = false;
+		}
+	}
 }
