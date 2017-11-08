@@ -26,6 +26,7 @@ public class Boss : MonoBehaviour {
 
 	public void Damaged(int damage) {
 		currentHp -= damage;
+		if (currentHp < 0) currentHp = 0;
 		UpdateBossHpUI();
 	}
 

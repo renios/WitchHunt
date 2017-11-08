@@ -219,6 +219,7 @@ public class Player : MonoBehaviour {
 
 	public void Damaged() {
 		currentHp -= 1;
+		if (currentHp < 0) currentHp = 0;
 		UpdatePlayerHpUI();
 	}
 
