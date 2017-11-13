@@ -18,7 +18,16 @@ public class Bullet : MonoBehaviour {
 	void Update () {
 		transform.position += direction * Time.deltaTime * speed;
 
-		if (Mathf.Abs(transform.position.x) > 10 || Mathf.Abs(transform.position.y) > 6) {
+		if (Mathf.Abs(transform.position.x) > 10*2 || Mathf.Abs(transform.position.y) > 6*2) {
+			DestroyBullet();
+		}
+	}
+
+	public void DestroyBullet() {
+		if (GetComponent<TrapBullet>() != null) {
+			GetComponent<TrapBullet>().InactiveNow();
+		}
+		else {
 			Destroy(gameObject);
 		}
 	}

@@ -24,7 +24,7 @@ public class PlayerCollider : MonoBehaviour {
 			Collider2D[] enemyBulletColliders = Physics2D.OverlapCircleAll(transform.position, Camera.main.orthographicSize / 2.0f);
 			enemyBulletColliders.ToList().ForEach(coll => {
 				if (coll.tag == "EnemyBullet") {
-					Destroy(coll.gameObject);
+					coll.GetComponent<Bullet>().DestroyBullet();
 				}
 			});
 		}

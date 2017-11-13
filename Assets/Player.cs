@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System.Linq;
 
 public class Player : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour {
 	public GameObject bombOrb;
 	int currentBomb;
 	List<Image> bombImages;
+	public int bombDamage;
 
 	public float defaultSpeed;
 	public float slowCoef;
@@ -31,11 +33,23 @@ public class Player : MonoBehaviour {
 	List<List<KeyCode>> moveInput;
 	List<bool> shotInput;
 	List<bool> slowInput;
+	List<bool> bombInput;
 
 	public GameObject bullet;
 
 	bool IsSlow() {
 		return Input.GetKey(KeyCode.LeftShift);
+	}
+
+	void ShotBomb() {
+		currentBomb -= 1;
+		UpdatePlayerBombUI();
+		FindObjectsOfType<Bullet>().ToList().ForEach(bullet => {
+			if (bullet.tag == "EnemyBullet") {
+				bullet.DestroyBullet();
+			}
+		});
+		FindObjectOfType<Boss>().Damaged(bombDamage);
 	}
 
 	void ShotSector() {
@@ -79,12 +93,13 @@ public class Player : MonoBehaviour {
 		bombImages = new List<Image>();
 		GameObject playerBombPanel = GameObject.Find("PlayerBombPanel");
 		currentBomb = initBomb;
-		for(int i = 0; i < initBomb; i++) {
+		for(int i = 0; i < maxBomb; i++) {
 			GameObject newBombOrb = Instantiate(bombOrb) as GameObject;
 			newBombOrb.transform.SetParent(playerBombPanel.transform);
 			newBombOrb.transform.localScale = new Vector3(1,1,1);
 			bombImages.Insert(i, newBombOrb.GetComponent<Image>());
 		}
+		UpdatePlayerBombUI();
 	}
 
 	// Use this for initialization
@@ -94,6 +109,7 @@ public class Player : MonoBehaviour {
 		moveInput = new List<List<KeyCode>>();
 		shotInput = new List<bool>();
 		slowInput = new List<bool>();
+		bombInput = new List<bool>();
 
 		InitializePlayerHp();
 		InitializePlayerBomb();
@@ -107,6 +123,7 @@ public class Player : MonoBehaviour {
 
 		Move();
 		Shot();
+		Bomb();
 
 		if (Input.GetKeyDown(KeyCode.P)) {
 			StartCoroutine (MoveByTrail());
@@ -161,6 +178,16 @@ public class Player : MonoBehaviour {
 
 			yield return null;
 		}
+	}
+
+	void Bomb() {
+		// 실제로 폭탄을 쐈을 때만 true로 입력
+		bombInput.Add(Input.GetKeyDown(KeyCode.X) && currentBomb > 0);
+
+		if (!Input.GetKeyDown(KeyCode.X)) return;
+		if (currentBomb <= 0) return; 
+
+		ShotBomb();
 	}
 
 	void Shot() {
@@ -229,6 +256,15 @@ public class Player : MonoBehaviour {
 		}
 		for (int i = currentHp; i < maxHp; i++) {
 			hpOrbImages[i].enabled = false;
+		}
+	}
+
+	void UpdatePlayerBombUI() {
+		for (int i = 0; i < currentBomb; i++) {
+			bombImages[i].enabled = true;
+		}
+		for (int i = currentBomb; i < maxBomb; i++) {
+			bombImages[i].enabled = false;
 		}
 	}
 }
