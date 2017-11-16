@@ -21,6 +21,11 @@ public class Bullet : MonoBehaviour {
 		if (Mathf.Abs(transform.position.x) > 10*2 || Mathf.Abs(transform.position.y) > 6*2) {
 			DestroyBullet();
 		}
+		else if (GetComponent<MushroomBullet>() != null) {
+			if (Mathf.Abs(transform.position.x) > 9.5f || Mathf.Abs(transform.position.y) > 5.5f) {
+				GetComponent<MushroomBullet>().DestroyBulletByWall();
+			}
+		}
 	}
 
 	public void DestroyBullet() {
