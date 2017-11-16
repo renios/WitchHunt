@@ -21,11 +21,11 @@ public class MushroomBullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		transform.Rotate(Vector3.right * Time.deltaTime * rotateSpeed);
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		transform.Rotate(Vector3.forward * rotateSpeed);	
 	}
 }

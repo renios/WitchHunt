@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BossAI_1stage : MonoBehaviour {
 
+	public float predelay;
+	
 	public GameObject crossbowBulletObj;
 	public float defaultShot1Delay;
 	public float defaultShot1SectorDelta;
@@ -26,7 +28,8 @@ public class BossAI_1stage : MonoBehaviour {
 	public float specialPattern2Delay;
 
 	// Use this for initialization
-	void Start () {
+	IEnumerator Start () {
+		yield return new WaitForSeconds(predelay);
 		StartCoroutine(DefaultShot1());
 		StartCoroutine(DefaultShot2());
 		StartCoroutine(SpecialPattern1());

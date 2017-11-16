@@ -30,6 +30,13 @@ public class TrapBulletManager : MonoBehaviour {
 			yield return tween.WaitForCompletion();
 			tween = transform.DOMove(new Vector3(0, moveRadius * 2, 0), 1/speed, false).SetEase(Ease.Linear);
 			yield return tween.WaitForCompletion();
+			
+			trapBullets.ForEach(bullet => {
+				if (bullet.isActive == false) {
+					StartCoroutine(bullet.Active());
+				}
+			});
+
 			tween = transform.DOMove(new Vector3(-moveRadius, moveRadius, 0), 1/speed, false).SetEase(Ease.Linear);
 			yield return tween.WaitForCompletion();
 			tween = transform.DOMove(new Vector3(0, 0, 0), 1/speed, false).SetEase(Ease.Linear);
@@ -40,7 +47,7 @@ public class TrapBulletManager : MonoBehaviour {
 					StartCoroutine(bullet.Active());
 				}
 			});
-			yield return new WaitForSeconds(FindObjectOfType<TrapBullet>().activeDelay);
+			// yield return new WaitForSeconds(FindObjectOfType<TrapBullet>().activeDelay);
 		}
 	}
 }

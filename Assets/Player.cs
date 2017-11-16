@@ -21,6 +21,7 @@ public class Player : MonoBehaviour {
 
 	public float defaultSpeed;
 	public float slowCoef;
+	public int damageCoef;
 	public float shotDelay;
 	float lastShotTime;
 
@@ -71,6 +72,7 @@ public class Player : MonoBehaviour {
 	void ShotStraightStrong() {
 		GameObject midBullet = Instantiate(bullet, transform.position, Quaternion.identity) as GameObject;
 		midBullet.GetComponent<Bullet>().direction = Vector3.right;
+		midBullet.GetComponent<Bullet>().damage *= damageCoef;
 
 		midBullet.transform.localScale *= 2;
 
