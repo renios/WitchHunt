@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossAI_1stage : MonoBehaviour {
 
 	public float predelay;
-	
+
 	public GameObject crossbowBulletObj;
 	public float defaultShot1Delay;
 	public float defaultShot1SectorDelta;
@@ -75,12 +75,18 @@ public class BossAI_1stage : MonoBehaviour {
 			GameObject midBullet = Instantiate(crossbowBulletObj, transform.position, Quaternion.identity) as GameObject;
 			GameObject lowerBullet = Instantiate(crossbowBulletObj, transform.position, Quaternion.identity) as GameObject;
 
-			upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(180 - defaultShot1SectorDelta);
-			midBullet.GetComponent<Bullet>().direction = Vector3.left;
-			lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(180 + defaultShot1SectorDelta);
+			Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
+			float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
 
-			upperBullet.transform.rotation *= Quaternion.Euler(0,0,180 - defaultShot1SectorDelta);
-			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,180 + defaultShot1SectorDelta);
+			Debug.Log(delta);
+
+			upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 - defaultShot1SectorDelta);
+			midBullet.GetComponent<Bullet>().direction = deltaVector;
+			lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 + defaultShot1SectorDelta);
+
+			upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - defaultShot1SectorDelta);
+			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
+			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + defaultShot1SectorDelta);
 
 			upperBullet.tag = "EnemyBullet";
 			midBullet.tag = "EnemyBullet";
