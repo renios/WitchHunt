@@ -7,6 +7,8 @@ using System.Linq;
 
 public class Player : MonoBehaviour {
 
+	public bool trailActive;
+
 	public int maxHp = 3;
 	public GameObject hpOrb;
 	int currentHp;
@@ -27,14 +29,6 @@ public class Player : MonoBehaviour {
 
 	// 기록용
 	int currentFrame = 0;
-
-	// 기록 방지를 위한 임시 변수.
-	bool isTrailOn = true;
-
-	List<List<KeyCode>> moveInput;
-	List<bool> shotInput;
-	List<bool> slowInput;
-	List<bool> bombInput;
 
 	public GameObject bullet;
 
@@ -107,11 +101,8 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		lastShotTime = 0;
-
-		moveInput = new List<List<KeyCode>>();
-		shotInput = new List<bool>();
-		slowInput = new List<bool>();
-		bombInput = new List<bool>();
+		if (trailActive) 
+			InputTrailer.InitializeInputTrailer();
 
 		InitializePlayerHp();
 		InitializePlayerBomb();
@@ -120,71 +111,18 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		currentFrame += 1;
-		
-		slowInput.Add(IsSlow());
+		if (trailActive)
+			InputTrailer.slowInput.Add(IsSlow());
 
 		Move();
 		Shot();
 		Bomb();
-
-		if (Input.GetKeyDown(KeyCode.P)) {
-			StartCoroutine (MoveByTrail());
-		}
-	}
-
-	IEnumerator MoveByTrail() {
-		isTrailOn = false;
-
-		for (int frame = 0; frame < moveInput.Count; frame++) {
-			// move
-			float speed = defaultSpeed;
-			List<KeyCode> inputs = moveInput[frame];
-
-			// shift키 입력시 저속이동
-			if (slowInput[frame]) 
-				speed *= slowCoef;
-
-			// 대각선으로 이동할 경우 속도 일정하게 유지
-			if ((inputs.Contains(KeyCode.LeftArrow) && inputs.Contains(KeyCode.UpArrow)) ||
-				(inputs.Contains(KeyCode.LeftArrow) && inputs.Contains(KeyCode.DownArrow)) ||
-				(inputs.Contains(KeyCode.RightArrow) && inputs.Contains(KeyCode.UpArrow)) ||
-				(inputs.Contains(KeyCode.RightArrow) && inputs.Contains(KeyCode.DownArrow))) {
-				speed *= 1/Mathf.Sqrt(2);
-			}
-
-			if (inputs.Contains(KeyCode.LeftArrow)) {
-				transform.position += Vector3.left * Time.deltaTime * speed;
-			}
-			if (inputs.Contains(KeyCode.RightArrow)) {
-				transform.position += Vector3.right * Time.deltaTime * speed;
-			}
-			if (inputs.Contains(KeyCode.UpArrow)) {
-				transform.position += Vector3.up * Time.deltaTime * speed;
-			}
-			if (inputs.Contains(KeyCode.DownArrow)) {
-				transform.position += Vector3.down * Time.deltaTime * speed;
-			}
-
-			// shot
-			lastShotTime += Time.deltaTime;
-
-			if ((shotInput[frame]) && (lastShotTime > shotDelay)) {
-				if (slowInput[frame]) {
-					ShotStraightStrong();
-				}
-				else {
-					ShotSector();
-				}
-				lastShotTime = 0;
-			}
-
-			yield return null;
-		}
 	}
 
 	void Bomb() {
 		// 실제로 폭탄을 쐈을 때만 true로 입력
-		bombInput.Add(Input.GetKeyDown(KeyCode.X) && currentBomb > 0);
+		if (trailActive)
+			InputTrailer.bombInput.Add(Input.GetKeyDown(KeyCode.X) && currentBomb > 0);
 
 		if (!Input.GetKeyDown(KeyCode.X)) return;
 		if (currentBomb <= 0) return; 
@@ -195,7 +133,8 @@ public class Player : MonoBehaviour {
 	void Shot() {
 		lastShotTime += Time.deltaTime;
 
-		shotInput.Add(Input.GetKey(KeyCode.Z));
+		if (trailActive)
+			InputTrailer.shotInput.Add(Input.GetKey(KeyCode.Z));
 
 		if (!Input.GetKey(KeyCode.Z)) return;
 		if (lastShotTime < shotDelay) return;
@@ -243,7 +182,8 @@ public class Player : MonoBehaviour {
 			inputs.Add(KeyCode.DownArrow);
 		}
 
-		moveInput.Add(inputs);
+		if (trailActive)
+			InputTrailer.moveInput.Add(inputs);
 	}
 
 	public void Damaged() {
