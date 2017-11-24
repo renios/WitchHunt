@@ -4,6 +4,24 @@ using UnityEngine;
 
 public class TrailPlayer : MonoBehaviour {
 
+	public GameObject circleBullet;
+	public int circleBulletCount;
+	
+	float lastDelta; 
+
+	public GameObject wallBullet;
+	public int wallBulletCount;
+	public int preDelayWallBullet;
+	public int wallBulletSpeed;
+
+	public GameObject followBullet;
+
+	public GameObject specialWallBullet;
+	public int specialWallBulletCount1;
+	public int specialWallBulletCount2;
+	public int preDelaySpecialWallBullet;
+	public int specialWallBulletSpeed;
+
 	Player player;
 
 	float lastShotTime = 0;
@@ -44,15 +62,82 @@ public class TrailPlayer : MonoBehaviour {
 
 			if ((InputTrailer.shotInput[frame]) && (lastShotTime > player.shotDelay)) {
 				if (InputTrailer.slowInput[frame]) {
-					ShotStraightStrong();
+					// ShotStraightStrong();
 				}
 				else {
-					ShotSector();
+					// ShotSector();
 				}
 				lastShotTime = 0;
 			}
 
 			yield return null;
+		}
+	}
+
+	void ShotWall(bool isSlow) {
+		StartCoroutine(ShotWallCoroutine(isSlow));
+	}
+
+	IEnumerator ShotWallCoroutine(bool isSlow) {
+		List<GameObject> newWallBullets = new List<GameObject>();
+		
+		float slit = 10.2f / (float)(wallBulletCount - 1);
+
+		for (int i = 0; i < wallBulletCount; i++) {
+			GameObject newWallBullet = Instantiate(wallBullet, new Vector3(0, 5.1f - slit * i, 0), Quaternion.identity) as GameObject;
+			newWallBullet.GetComponent<Bullet>().direction = Vector3.right;
+			newWallBullet.GetComponent<Bullet>().speed = 0;
+			newWallBullets.Add(newWallBullet);
+		}
+
+		yield return new WaitForSeconds(preDelayWallBullet);
+
+		float speed = wallBulletSpeed;
+		if (isSlow) speed *= 0.5f;
+		foreach (var newWallBullet in newWallBullets) {
+			if (newWallBullet != null) {
+				newWallBullet.GetComponent<Bullet>().speed = speed;
+			}
+		}
+	}
+
+	void ShotFollow() {
+		GameObject newBullet = Instantiate(followBullet, transform.position, Quaternion.identity) as GameObject;
+		
+		Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
+		float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
+
+		newBullet.GetComponent<Bullet>().direction = deltaVector;
+		newBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
+	}
+
+	void ShotSpecialWall(bool isSlow) {
+		StartCoroutine(ShotSpecialWallCoroutine(isSlow));
+	}
+
+	IEnumerator ShotSpecialWallCoroutine(bool isSlow) {
+		List<GameObject> newWallBullets = new List<GameObject>();
+	
+		int count = specialWallBulletCount1;
+		if (isSlow) count = specialWallBulletCount2;
+		
+		float slit = 10.2f / (float)(count - 1);
+
+		for (int i = 0; i < count; i++) {
+			GameObject newWallBullet = Instantiate(specialWallBullet, new Vector3(9.5f, 5.1f - slit * i, 0), Quaternion.identity) as GameObject;
+			newWallBullet.GetComponent<Bullet>().direction = Vector3.left;
+			newWallBullet.GetComponent<Bullet>().speed = 0;
+			newWallBullets.Add(newWallBullet);
+		}
+
+		yield return new WaitForSeconds(preDelaySpecialWallBullet);
+
+		float speed = specialWallBulletSpeed;
+		if (isSlow) speed *= 0.5f;
+		foreach (var newWallBullet in newWallBullets) {
+			if (newWallBullet != null) {
+				newWallBullet.GetComponent<Bullet>().speed = speed;
+			}
 		}
 	}
 
@@ -86,6 +171,22 @@ public class TrailPlayer : MonoBehaviour {
 	void Start () {
 		player = FindObjectOfType<Player>();
 		StartCoroutine (MoveByTrail());
+		StartCoroutine(pattern1());
+		StartCoroutine(pattern2());
+	}
+
+	IEnumerator pattern1 () {
+		while(true) {
+			ShotFollow();
+			yield return new WaitForSeconds(0.25f);
+		}
+	}
+
+	IEnumerator pattern2 () {
+		while (true) {
+			ShotWall(false);
+			yield return new WaitForSeconds(2);
+		}
 	}
 	
 	// Update is called once per frame

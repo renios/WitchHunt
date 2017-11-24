@@ -78,7 +78,7 @@ public class BossAI_1stage : MonoBehaviour {
 			Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
 			float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
 
-			Debug.Log(delta);
+			// Debug.Log(delta);
 
 			upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 - defaultShot1SectorDelta);
 			midBullet.GetComponent<Bullet>().direction = deltaVector;

@@ -5,6 +5,7 @@ using System.Linq;
 
 public class PlayerCollider : MonoBehaviour {
 
+	public GameObject hitParticle;
 	Player player;
 
 	// Use this for initialization
@@ -22,6 +23,9 @@ public class PlayerCollider : MonoBehaviour {
 			player.Damaged();
 
 			Collider2D[] enemyBulletColliders = Physics2D.OverlapCircleAll(transform.position, Camera.main.orthographicSize / 2.0f);
+			if (enemyBulletColliders.ToList().Any(coll => coll.tag == "EnemyBullet")) {
+				Instantiate(hitParticle, transform.position, Quaternion.identity);
+			}
 			enemyBulletColliders.ToList().ForEach(coll => {
 				if (coll.tag == "EnemyBullet") {
 					coll.GetComponent<Bullet>().DestroyBullet();
@@ -33,5 +37,4 @@ public class PlayerCollider : MonoBehaviour {
 	//public static Collider2D[] OverlapCircleAll(Vector2 point, 
 	//	float radius, int layerMask = DefaultRaycastLayers, 
 	//	float minDepth = -Mathf.Infinity, float maxDepth = Mathf.Infinity);
-
 }
