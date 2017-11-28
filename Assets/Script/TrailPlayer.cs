@@ -186,6 +186,7 @@ public class TrailPlayer : MonoBehaviour {
 		}
 
 		bullets.ForEach(bullet => {
+			bullet.transform.parent = transform;
 			LaserBullet lb = bullet.GetComponent<LaserBullet>();
 			lb.speed = laserBulletSpeed;
 			lb.remainTime = laserRemainTime;
