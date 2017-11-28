@@ -5,6 +5,7 @@ using UnityEngine;
 public class MushroomBullet : MonoBehaviour {
 
 	public GameObject mushroomSubBulletObj;
+	public float subBulletSpeed;
 	public int subBulletCount;
 	public float rotateSpeed;
 
@@ -13,7 +14,9 @@ public class MushroomBullet : MonoBehaviour {
 
 		for (int i = 0; i < subBulletCount; i++) {
 			GameObject newBullet = Instantiate(mushroomSubBulletObj, transform.position, Quaternion.identity) as GameObject;
-			newBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta * i);
+			Bullet bullet = newBullet.GetComponent<Bullet>();
+			bullet.direction = Utility.GetUnitVector(delta * i);
+			bullet.speed = subBulletSpeed;
 		}
 
 		Destroy(gameObject);

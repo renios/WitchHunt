@@ -4,28 +4,36 @@ using UnityEngine;
 
 public class BossAI_1stage : MonoBehaviour {
 
-	public float predelay;
+	public float predelay = 1;
 
 	public GameObject crossbowBulletObj;
-	public float defaultShot1Delay;
-	public float defaultShot1SectorDelta;
+	public float defaultShot1Speed = 10;
+	public float defaultShot1Delay = 2;
+	public float defaultShot1SectorDelta = 15;
 	public GameObject seedBulletObj;
-	public float defaultShot2Delay;
-	public float defaultShot2ShotTime;
-	public int defaultShot2Count;
+	public float defaultShot2Speed = 5;
+	public float defaultShot2Delay = 8;
+	public float defaultShot2ShotTime = 2;
+	public int defaultShot2Count = 80;
 
 	// 특수패턴 1 : 격자탄막
 	public GameObject specialBullet1Obj;
-	public float specialPattern1PreDelay;
-	public float specialPattern1Time;
-	public float specialPattern1Delay;
+	public float specialPattern1PreDelay = 2;
+	public float specialPattern1Time = 10;
+	public float specialPattern1Delay = 10;
 
 	// 특수패턴 2 : 버섯탄
 	public GameObject specialBullet2Obj;
-	public int specialBullet2Count;
-	public float specialPattern2PreDelay;
-	public float specialPattern2ShotDelay;
-	public float specialPattern2Delay;
+	public float specialBullet2Speed = 0.5f;
+	public int specialBullet2Count = 3;
+	public float specialPattern2PreDelay = 12;
+	public float specialPattern2ShotDelay = 1;
+	public float specialPattern2Delay = 12;
+
+	// 특수패턴 2-1 : 버섯포자탄
+	public GameObject specialBullet2SubObj;
+	public float specialBullet2SubSpeed = 2;
+	public int specialBullet2SubCount = 60;
 
 	// Use this for initialization
 	IEnumerator Start () {
@@ -62,7 +70,13 @@ public class BossAI_1stage : MonoBehaviour {
 			for (int i = 0; i < specialBullet2Count; i++) {
 				GameObject newBullet = Instantiate(specialBullet2Obj, transform.position, Quaternion.identity) as GameObject;
 				Vector3 direction = FindObjectOfType<Player>().transform.position - transform.position;
-				newBullet.GetComponent<Bullet>().direction = direction;
+				Bullet bullet = newBullet.GetComponent<Bullet>();
+				bullet.direction = direction;
+				bullet.speed = specialBullet2Speed;
+				MushroomBullet mBullet = newBullet.GetComponent<MushroomBullet>();
+				mBullet.mushroomSubBulletObj = specialBullet2SubObj;
+				mBullet.subBulletCount = specialBullet2SubCount;
+				mBullet.subBulletSpeed = specialBullet2SubSpeed;
 				yield return new WaitForSeconds(deltaTime);
 			}
 			yield return new WaitForSeconds(specialPattern2Delay - deltaTime * specialBullet2Count);
@@ -83,6 +97,10 @@ public class BossAI_1stage : MonoBehaviour {
 			upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 - defaultShot1SectorDelta);
 			midBullet.GetComponent<Bullet>().direction = deltaVector;
 			lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 + defaultShot1SectorDelta);
+
+			upperBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
+			midBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
+			lowerBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
 
 			upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - defaultShot1SectorDelta);
 			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
@@ -106,7 +124,9 @@ public class BossAI_1stage : MonoBehaviour {
 		while (true) {
 			for (int i = 0; i < defaultShot2Count; i++) {
 				GameObject newBullet = Instantiate(seedBulletObj, transform.position, Quaternion.identity) as GameObject;
-				newBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta * i);
+				Bullet bullet = newBullet.GetComponent<Bullet>();
+				bullet.direction = Utility.GetUnitVector(delta * i);
+				bullet.speed = defaultShot2Speed;
 				yield return new WaitForSeconds(deltaTime);
 			}
 			yield return new WaitForSeconds(defaultShot2Delay - deltaTime);
