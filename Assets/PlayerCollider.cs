@@ -28,7 +28,8 @@ public class PlayerCollider : MonoBehaviour {
 			}
 			enemyBulletColliders.ToList().ForEach(coll => {
 				if (coll.tag == "EnemyBullet") {
-					coll.GetComponent<Bullet>().DestroyBullet();
+					if (coll.GetComponent<LaserBullet>() == null)
+						coll.GetComponent<Bullet>().DestroyBullet();
 				}
 			});
 		}
