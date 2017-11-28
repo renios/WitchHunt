@@ -10,6 +10,12 @@ public class TrailPlayer : MonoBehaviour {
 	public float spreadBulletDelay;	
 	float lastDelta; 
 
+	public GameObject laserBullet;
+	public int laserCount;
+	public float laserAngle;
+	public float laserRemainTime;
+	public float laserBulletDelay;
+
 	public GameObject wallBullet;
 	public int wallBulletCount;
 	public int preDelayWallBullet;
@@ -86,6 +92,17 @@ public class TrailPlayer : MonoBehaviour {
 		}
 
 		lastDelta += spreadBulletRotateAngle;
+	}
+
+	void ShotLaser() {
+		List<GameObject> bullets = new List<GameObject>();
+
+		Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
+		float delta = Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
+
+		GameObject bullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+		bullet.transform.rotation *= Quaternion.Euler(0,0,delta);
+		bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime;
 	}
 
 	void ShotWall(bool isSlow) {
@@ -183,12 +200,16 @@ public class TrailPlayer : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	IEnumerator Start () {
 		player = FindObjectOfType<Player>();
+		
+		yield return new WaitForSeconds(1);
+		
 		// StartCoroutine (MoveByTrail());
 		// StartCoroutine(pattern1());
 		// StartCoroutine(pattern2());
-		StartCoroutine(SpreadPattern());
+		// StartCoroutine(SpreadPattern());
+		StartCoroutine(LaserPattern());
 	}
 
 	IEnumerator Pattern1 () {
@@ -209,6 +230,13 @@ public class TrailPlayer : MonoBehaviour {
 		while (true) {
 			ShotSpread();
 			yield return new WaitForSeconds(spreadBulletDelay);
+		}
+	}
+
+	IEnumerator LaserPattern() {
+		while (true) {
+			ShotLaser();
+			yield return new WaitForSeconds(laserBulletDelay);
 		}
 	}
 	
