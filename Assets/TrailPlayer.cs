@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class TrailPlayer : MonoBehaviour {
 
-	public GameObject circleBullet;
-	public int circleBulletCount;
-	
+	public GameObject spreadBullet;
+	public int spreadBulletCount;
+	public float spreadBulletRotateAngle;
+	public float spreadBulletDelay;	
 	float lastDelta; 
 
 	public GameObject wallBullet;
@@ -74,6 +75,19 @@ public class TrailPlayer : MonoBehaviour {
 		}
 	}
 
+	void ShotSpread() {
+		List<GameObject> bullets = new List<GameObject>();
+		
+		float delta = 360 / (float)spreadBulletCount;
+		for (int i = 0; i < spreadBulletCount; i++) {
+			GameObject bullet = Instantiate(spreadBullet, transform.position, Quaternion.identity) as GameObject;
+			Vector3 direction = Utility.GetUnitVector(lastDelta + i * delta);
+			bullet.GetComponent<Bullet>().direction = direction;
+		}
+
+		lastDelta += spreadBulletRotateAngle;
+	}
+
 	void ShotWall(bool isSlow) {
 		StartCoroutine(ShotWallCoroutine(isSlow));
 	}
@@ -85,7 +99,6 @@ public class TrailPlayer : MonoBehaviour {
 
 		for (int i = 0; i < wallBulletCount; i++) {
 			GameObject newWallBullet = Instantiate(wallBullet, new Vector3(0, 5.1f - slit * i, 0), Quaternion.identity) as GameObject;
-			newWallBullet.GetComponent<Bullet>().direction = Vector3.right;
 			newWallBullet.GetComponent<Bullet>().speed = 0;
 			newWallBullets.Add(newWallBullet);
 		}
@@ -94,8 +107,10 @@ public class TrailPlayer : MonoBehaviour {
 
 		float speed = wallBulletSpeed;
 		if (isSlow) speed *= 0.5f;
+		int playerDirection = (int)Mathf.Sign(player.transform.position.x);
 		foreach (var newWallBullet in newWallBullets) {
 			if (newWallBullet != null) {
+				newWallBullet.GetComponent<Bullet>().direction = Vector3.right * playerDirection;
 				newWallBullet.GetComponent<Bullet>().speed = speed;
 			}
 		}
@@ -170,29 +185,35 @@ public class TrailPlayer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		player = FindObjectOfType<Player>();
-		StartCoroutine (MoveByTrail());
-		StartCoroutine(pattern1());
-		StartCoroutine(pattern2());
+		// StartCoroutine (MoveByTrail());
+		// StartCoroutine(pattern1());
+		// StartCoroutine(pattern2());
+		StartCoroutine(SpreadPattern());
 	}
 
-	IEnumerator pattern1 () {
+	IEnumerator Pattern1 () {
 		while(true) {
 			ShotFollow();
 			yield return new WaitForSeconds(0.25f);
 		}
 	}
 
-	IEnumerator pattern2 () {
+	IEnumerator Pattern2 () {
 		while (true) {
 			ShotWall(false);
 			yield return new WaitForSeconds(2);
 		}
 	}
+
+	IEnumerator SpreadPattern() {
+		while (true) {
+			ShotSpread();
+			yield return new WaitForSeconds(spreadBulletDelay);
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
-		// if (Input.GetKeyDown(KeyCode.P)) {
-		// 	StartCoroutine (MoveByTrail());
-		// }
+
 	}
 }
