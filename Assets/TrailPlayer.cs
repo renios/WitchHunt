@@ -89,6 +89,7 @@ public class TrailPlayer : MonoBehaviour {
 			GameObject bullet = Instantiate(spreadBullet, transform.position, Quaternion.identity) as GameObject;
 			Vector3 direction = Utility.GetUnitVector(lastDelta + i * delta);
 			bullet.GetComponent<Bullet>().direction = direction;
+			bullets.Add(bullet);
 		}
 
 		lastDelta += spreadBulletRotateAngle;
@@ -100,9 +101,45 @@ public class TrailPlayer : MonoBehaviour {
 		Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
 		float delta = Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
 
-		GameObject bullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-		bullet.transform.rotation *= Quaternion.Euler(0,0,delta);
-		bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime;
+		if (laserCount % 2 != 0) {
+			GameObject midBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
+			bullets.Add(midBullet);
+			
+			for (int i = 0; i < laserCount/2; i++) {
+				GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				GameObject lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta - laserAngle * (i + 1));
+				lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + laserAngle * (i + 1));
+				bullets.Add(upperBullet);
+				bullets.Add(lowerBullet);
+			}
+
+			bullets.ForEach(bullet => bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime);
+		}
+		else {
+			GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+			GameObject lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+			upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta - laserAngle/2f);
+			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + laserAngle/2f);
+			bullets.Add(upperBullet);
+			bullets.Add(lowerBullet);
+			
+			for (int i = 0; i < laserCount/2; i++) {
+				upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta - laserAngle * (i + 0.5f));
+				lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + laserAngle * (i + 0.5f));
+				bullets.Add(upperBullet);
+				bullets.Add(lowerBullet);
+			}
+
+			bullets.ForEach(bullet => bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime);
+		}
+
+		// GameObject bullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+		// bullet.transform.rotation *= Quaternion.Euler(0,0,delta);
+		// bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime;
 	}
 
 	void ShotWall(bool isSlow) {
