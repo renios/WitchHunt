@@ -5,33 +5,83 @@ using UnityEngine;
 public class TrailPlayer : MonoBehaviour {
 
 	public GameObject spreadBullet;
-	public int spreadBulletCount;
-	public float spreadBulletRotateAngle;
-	public float spreadBulletDelay;	
+	public float spreadBulletSpeed = 10;
+	public int spreadBulletCount = 12;
+	public float spreadBulletRotateAngle = 10;
+	public float spreadBulletDelay = 0.1f;	
 	float lastDelta; 
 
 	public GameObject laserBullet;
-	public int laserCount;
-	public float laserAngle;
-	public float laserRemainTime;
-	public float laserBulletDelay;
+	public float laserBulletSpeed = 1;
+	public int laserCount = 5;
+	public float laserAngle = 15;
+	public float laserRemainTime = 2f;
+	public float laserBulletDelay = 0.5f;
 
 	public GameObject wallBullet;
-	public int wallBulletCount;
-	public int preDelayWallBullet;
-	public int wallBulletSpeed;
-
+	public float wallBulletSpeed = 2;
+	public int wallBulletCount = 15;
+	public float wallBulletPreDelay = 1;
+	public float wallBulletDelay = 2;
+	
 	public GameObject followBullet;
+	public float followBulletSpeed = 10;
+	public float followBulletDelay = 0.25f;
+
+	public GameObject specialLaserBullet;
+	public float specialLaserBulletSpeed = 2;
+	public int specialLaserCount = 2;
+	public float specialLaserAngle = 20;
+	public float specialLaserRemainTime = 45;
 
 	public GameObject specialWallBullet;
-	public int specialWallBulletCount1;
-	public int specialWallBulletCount2;
-	public int preDelaySpecialWallBullet;
-	public int specialWallBulletSpeed;
+	public float specialWallBulletSpeed = 1;
+	public int specialWallBulletCount1 = 7;
+	public int specialWallBulletCount2 = 10;
+	public float specialWallBulletPreDelay = 0;	
+	public float specialWallBulletDelay = 1;
 
 	Player player;
 
 	float lastShotTime = 0;
+
+	public int pattern = 1;
+	public float pattern1Time = 10;
+	public float pattern2Time = 10;
+	public float pattern3Time = 45;
+
+	IEnumerator ChangePattern() {
+
+		List<Coroutine> currentPatterns = new List<Coroutine>();
+		Coroutine currentPattern1;
+		Coroutine currentPattern2;
+
+		while (true) {
+			pattern = 1;
+			currentPattern1 = StartCoroutine(Pattern1_1());
+			currentPattern2 = StartCoroutine(Pattern1_2());
+			currentPatterns.Add(currentPattern1);
+			currentPatterns.Add(currentPattern2);
+			yield return new WaitForSeconds(pattern1Time);
+			currentPatterns.ForEach(pattern => StopCoroutine(pattern));
+
+			pattern = 2;
+			currentPattern1 = StartCoroutine(Pattern2_1());
+			currentPattern2 = StartCoroutine(Pattern2_2());
+			currentPatterns.Add(currentPattern1);
+			currentPatterns.Add(currentPattern2);
+			yield return new WaitForSeconds(pattern2Time);
+			currentPatterns.ForEach(pattern => StopCoroutine(pattern));
+
+			pattern = 3;
+			currentPattern1 = StartCoroutine(Pattern3_1());
+			currentPattern2 = StartCoroutine(Pattern3_2());
+			currentPatterns.Add(currentPattern1);
+			currentPatterns.Add(currentPattern2);
+			yield return new WaitForSeconds(pattern3Time);
+			currentPatterns.ForEach(pattern => StopCoroutine(pattern));
+		}
+	}
 
 	IEnumerator MoveByTrail() {
 		for (int frame = 0; frame < InputTrailer.moveInput.Count; frame++) {
@@ -92,6 +142,8 @@ public class TrailPlayer : MonoBehaviour {
 			bullets.Add(bullet);
 		}
 
+		bullets.ForEach(bullet => bullet.GetComponent<Bullet>().speed = spreadBulletSpeed);
+
 		lastDelta += spreadBulletRotateAngle;
 	}
 
@@ -114,8 +166,6 @@ public class TrailPlayer : MonoBehaviour {
 				bullets.Add(upperBullet);
 				bullets.Add(lowerBullet);
 			}
-
-			bullets.ForEach(bullet => bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime);
 		}
 		else {
 			GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
@@ -133,13 +183,13 @@ public class TrailPlayer : MonoBehaviour {
 				bullets.Add(upperBullet);
 				bullets.Add(lowerBullet);
 			}
-
-			bullets.ForEach(bullet => bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime);
 		}
 
-		// GameObject bullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-		// bullet.transform.rotation *= Quaternion.Euler(0,0,delta);
-		// bullet.GetComponent<LaserBullet>().remainTime = laserRemainTime;
+		bullets.ForEach(bullet => {
+			LaserBullet lb = bullet.GetComponent<LaserBullet>();
+			lb.speed = laserBulletSpeed;
+			lb.remainTime = laserRemainTime;
+		});
 	}
 
 	void ShotWall(bool isSlow) {
@@ -157,15 +207,16 @@ public class TrailPlayer : MonoBehaviour {
 			newWallBullets.Add(newWallBullet);
 		}
 
-		yield return new WaitForSeconds(preDelayWallBullet);
+		yield return new WaitForSeconds(wallBulletPreDelay);
 
 		float speed = wallBulletSpeed;
 		if (isSlow) speed *= 0.5f;
 		int playerDirection = (int)Mathf.Sign(player.transform.position.x);
 		foreach (var newWallBullet in newWallBullets) {
 			if (newWallBullet != null) {
-				newWallBullet.GetComponent<Bullet>().direction = Vector3.right * playerDirection;
-				newWallBullet.GetComponent<Bullet>().speed = speed;
+				Bullet bullet = newWallBullet.GetComponent<Bullet>();
+				bullet.GetComponent<Bullet>().direction = Vector3.right * playerDirection;
+				bullet.GetComponent<Bullet>().speed = speed;
 			}
 		}
 	}
@@ -178,6 +229,24 @@ public class TrailPlayer : MonoBehaviour {
 
 		newBullet.GetComponent<Bullet>().direction = deltaVector;
 		newBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
+	}
+
+	void ShotSpecialLaser() {
+		List<GameObject> bullets = new List<GameObject>();
+
+		GameObject upperBullet = Instantiate(specialLaserBullet, transform.position, Quaternion.identity) as GameObject;
+		GameObject lowerBullet = Instantiate(specialLaserBullet, transform.position, Quaternion.identity) as GameObject;
+		upperBullet.transform.rotation *= Quaternion.Euler(0,0,specialLaserAngle);
+		lowerBullet.transform.rotation *= Quaternion.Euler(0,0,-specialLaserAngle);
+		bullets.Add(upperBullet);
+		bullets.Add(lowerBullet);
+
+		bullets.ForEach(bullet => {
+			bullet.transform.parent = transform;
+			LaserBullet lb = bullet.GetComponent<LaserBullet>();
+			lb.speed = specialLaserBulletSpeed;
+			lb.remainTime = specialLaserRemainTime;
+		});
 	}
 
 	void ShotSpecialWall(bool isSlow) {
@@ -199,7 +268,7 @@ public class TrailPlayer : MonoBehaviour {
 			newWallBullets.Add(newWallBullet);
 		}
 
-		yield return new WaitForSeconds(preDelaySpecialWallBullet);
+		yield return new WaitForSeconds(specialWallBulletPreDelay);
 
 		float speed = specialWallBulletSpeed;
 		if (isSlow) speed *= 0.5f;
@@ -210,73 +279,63 @@ public class TrailPlayer : MonoBehaviour {
 		}
 	}
 
-	void ShotSector() {
-		float sectorDelta = 15;
-
-		GameObject upperBullet = Instantiate(player.bullet, transform.position, Quaternion.identity) as GameObject;
-		GameObject midBullet = Instantiate(player.bullet, transform.position, Quaternion.identity) as GameObject;
-		GameObject lowerBullet = Instantiate(player.bullet, transform.position, Quaternion.identity) as GameObject;
-
-		upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(sectorDelta);
-		midBullet.GetComponent<Bullet>().direction = Vector3.right;
-		lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(-sectorDelta);
-
-		upperBullet.tag = "EnemyBullet";
-		midBullet.tag = "EnemyBullet";
-		lowerBullet.tag = "EnemyBullet";
-	}
-
-	void ShotStraightStrong() {
-		GameObject midBullet = Instantiate(player.bullet, transform.position, Quaternion.identity) as GameObject;
-		midBullet.GetComponent<Bullet>().direction = Vector3.right;
-		midBullet.GetComponent<Bullet>().damage *= player.damageCoef;
-
-		midBullet.transform.localScale *= 2;
-
-		midBullet.tag = "EnemyBullet";
-	}
-
 	// Use this for initialization
 	IEnumerator Start () {
 		player = FindObjectOfType<Player>();
 		
 		yield return new WaitForSeconds(1);
-		
-		// StartCoroutine (MoveByTrail());
-		// StartCoroutine(pattern1());
-		// StartCoroutine(pattern2());
-		// StartCoroutine(SpreadPattern());
-		StartCoroutine(LaserPattern());
+
+		if (InputTrailer.moveInput != null)
+			StartCoroutine (MoveByTrail());
+		StartCoroutine(ChangePattern());
 	}
 
-	IEnumerator Pattern1 () {
+	// 전방위 원형탄
+	IEnumerator Pattern1_1 () {
 		while(true) {
-			ShotFollow();
-			yield return new WaitForSeconds(0.25f);
-		}
-	}
-
-	IEnumerator Pattern2 () {
-		while (true) {
-			ShotWall(false);
-			yield return new WaitForSeconds(2);
-		}
-	}
-
-	IEnumerator SpreadPattern() {
-		while (true) {
-			ShotSpread();
+			ShotSpread();	
 			yield return new WaitForSeconds(spreadBulletDelay);
 		}
 	}
 
-	IEnumerator LaserPattern() {
-		while (true) {
-			ShotLaser();
+	// 유도 레이저탄
+	IEnumerator Pattern1_2 () {
+		while(true) {
+			ShotLaser();	
 			yield return new WaitForSeconds(laserBulletDelay);
 		}
 	}
-	
+
+	// 원형탄 벽
+	IEnumerator Pattern2_1 () {
+		while (true) {
+			ShotWall(false);
+			yield return new WaitForSeconds(wallBulletDelay);
+		}
+	}
+
+	// 유도 원형탄
+	IEnumerator Pattern2_2 () {
+		while (true) {
+			ShotFollow();
+			yield return new WaitForSeconds(followBulletDelay);
+		}
+	}
+
+	// 특수 패턴 - 레이저
+	IEnumerator Pattern3_1 () {
+		ShotSpecialLaser();
+		yield return null;
+	}
+
+	// 특수 패턴 - 이동하는 벽
+	IEnumerator Pattern3_2 () {
+		while (true) {
+			ShotSpecialWall(false);
+			yield return new WaitForSeconds(specialWallBulletDelay);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 
