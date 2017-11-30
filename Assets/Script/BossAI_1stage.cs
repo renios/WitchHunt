@@ -35,6 +35,12 @@ public class BossAI_1stage : MonoBehaviour {
 	public float specialBullet2SubSpeed = 2;
 	public int specialBullet2SubCount = 60;
 
+	// 패턴변환 쿨타임 (아직 미완성)
+	public int pattern = 1;
+	public int pattern1Time = 10;
+	public int pattern2Time;
+	public int pattern3Time;
+
 	// Use this for initialization
 	IEnumerator Start () {
 		yield return new WaitForSeconds(predelay);
