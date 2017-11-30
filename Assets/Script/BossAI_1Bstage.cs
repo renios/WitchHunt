@@ -44,9 +44,7 @@ public class BossAI_1Bstage : MonoBehaviour {
 	Player player;
 	TrailPlayer trailPlayer;
 
-	float lastShotTime = 0;
-
-	public int pattern = 1;
+	int pattern = 1;
 	public float pattern1Time = 10;
 	public float pattern2Time = 10;
 	public float pattern3Time = 45;

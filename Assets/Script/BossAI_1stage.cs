@@ -18,17 +18,13 @@ public class BossAI_1stage : MonoBehaviour {
 
 	// 특수패턴 1 : 격자탄막
 	public GameObject specialBullet1Obj;
-	public float specialPattern1PreDelay = 2;
 	public float specialPattern1Time = 10;
-	public float specialPattern1Delay = 10;
 
 	// 특수패턴 2 : 버섯탄
 	public GameObject specialBullet2Obj;
 	public float specialBullet2Speed = 0.5f;
 	public int specialBullet2Count = 3;
-	public float specialPattern2PreDelay = 12;
 	public float specialPattern2ShotDelay = 1;
-	public float specialPattern2Delay = 12;
 
 	// 특수패턴 2-1 : 버섯포자탄
 	public GameObject specialBullet2SubObj;
