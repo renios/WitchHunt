@@ -35,19 +35,32 @@ public class BossAI_1stage : MonoBehaviour {
 	public float specialBullet2SubSpeed = 2;
 	public int specialBullet2SubCount = 60;
 
-	// 패턴변환 쿨타임 (아직 미완성)
-	public int pattern = 1;
+	// 패턴변환 쿨타임
+	int pattern = 1;
 	public int pattern1Time = 10;
-	public int pattern2Time;
-	public int pattern3Time;
+	public int pattern2Time = 10;
+	public int pattern3Time = 10;
+
+	IEnumerator ChangePattern() {
+		pattern = 1;
+		// 특수패턴이 나오지 않는 구간
+		yield return new WaitForSeconds(pattern1Time);
+	
+		while (true) {
+			pattern = 2;
+			yield return StartCoroutine(SpecialPattern1());
+
+			pattern = 3;
+			yield return StartCoroutine(SpecialPattern2());
+		}
+	}
 
 	// Use this for initialization
 	IEnumerator Start () {
 		yield return new WaitForSeconds(predelay);
 		StartCoroutine(DefaultShot1());
 		StartCoroutine(DefaultShot2());
-		StartCoroutine(SpecialPattern1());
-		StartCoroutine(SpecialPattern2());
+		StartCoroutine(ChangePattern());
 	}
 	
 	// Update is called once per frame
@@ -55,37 +68,30 @@ public class BossAI_1stage : MonoBehaviour {
 		
 	}
 
+	// 특수패턴 1 - 격자탄막
 	IEnumerator SpecialPattern1() {
-		yield return new WaitForSeconds(specialPattern1PreDelay);
-		while (true) {
-			// 격자탄막은 부모오브젝트째로 (0,0)에 생성
-			GameObject specialBullet1 = Instantiate(specialBullet1Obj) as GameObject;
-			yield return new WaitForSeconds(specialPattern1Time);
-			Destroy(specialBullet1);
-			yield return new WaitForSeconds(specialPattern1Delay);
-		}
+		// 격자탄막은 부모오브젝트째로 (0,0)에 생성
+		GameObject specialBullet1 = Instantiate(specialBullet1Obj) as GameObject;
+		yield return new WaitForSeconds(specialPattern1Time);
+		Destroy(specialBullet1);
 	}
 
+	// 특수패턴 2 - 버섯탄
 	IEnumerator SpecialPattern2() {
-		yield return new WaitForSeconds(specialPattern2PreDelay);
-
 		float deltaTime = specialPattern2ShotDelay;
 
-		while (true) {
-			// 버섯탄은 플레이어 방향으로 날아간다
-			for (int i = 0; i < specialBullet2Count; i++) {
-				GameObject newBullet = Instantiate(specialBullet2Obj, transform.position, Quaternion.identity) as GameObject;
-				Vector3 direction = FindObjectOfType<Player>().transform.position - transform.position;
-				Bullet bullet = newBullet.GetComponent<Bullet>();
-				bullet.direction = direction;
-				bullet.speed = specialBullet2Speed;
-				MushroomBullet mBullet = newBullet.GetComponent<MushroomBullet>();
-				mBullet.mushroomSubBulletObj = specialBullet2SubObj;
-				mBullet.subBulletCount = specialBullet2SubCount;
-				mBullet.subBulletSpeed = specialBullet2SubSpeed;
-				yield return new WaitForSeconds(deltaTime);
-			}
-			yield return new WaitForSeconds(specialPattern2Delay - deltaTime * specialBullet2Count);
+		// 버섯탄은 플레이어 방향으로 날아간다
+		for (int i = 0; i < specialBullet2Count; i++) {
+			GameObject newBullet = Instantiate(specialBullet2Obj, transform.position, Quaternion.identity) as GameObject;
+			Vector3 direction = FindObjectOfType<Player>().transform.position - transform.position;
+			Bullet bullet = newBullet.GetComponent<Bullet>();
+			bullet.direction = direction;
+			bullet.speed = specialBullet2Speed;
+			MushroomBullet mBullet = newBullet.GetComponent<MushroomBullet>();
+			mBullet.mushroomSubBulletObj = specialBullet2SubObj;
+			mBullet.subBulletCount = specialBullet2SubCount;
+			mBullet.subBulletSpeed = specialBullet2SubSpeed;
+			yield return new WaitForSeconds(deltaTime);
 		}
 	}
 
@@ -97,8 +103,6 @@ public class BossAI_1stage : MonoBehaviour {
 
 			Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
 			float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
-
-			// Debug.Log(delta);
 
 			upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 - defaultShot1SectorDelta);
 			midBullet.GetComponent<Bullet>().direction = deltaVector;
@@ -112,10 +116,6 @@ public class BossAI_1stage : MonoBehaviour {
 			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
 			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + defaultShot1SectorDelta);
 
-			upperBullet.tag = "EnemyBullet";
-			midBullet.tag = "EnemyBullet";
-			lowerBullet.tag = "EnemyBullet";
-	
 			yield return new WaitForSeconds(defaultShot1Delay);
 		}
 	}
