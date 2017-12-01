@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BossAI_1Bstage : MonoBehaviour {
 
+	public float preDelay = 1;
+
 	public GameObject spreadBullet;
 	public float spreadBulletSpeed = 10;
 	public int spreadBulletCount = 12;
@@ -243,7 +245,7 @@ public class BossAI_1Bstage : MonoBehaviour {
 		player = FindObjectOfType<Player>();
 		trailPlayer = FindObjectOfType<TrailPlayer>();
 		
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(preDelay);
 
 		StartCoroutine(ChangePattern());
 	}
