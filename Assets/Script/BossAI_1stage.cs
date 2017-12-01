@@ -10,6 +10,7 @@ public class BossAI_1stage : MonoBehaviour {
 	public float defaultShot1Speed = 10;
 	public float defaultShot1Delay = 2;
 	public float defaultShot1SectorDelta = 15;
+
 	public GameObject seedBulletObj;
 	public float defaultShot2Speed = 5;
 	public float defaultShot2Delay = 8;
