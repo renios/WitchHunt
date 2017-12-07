@@ -8,8 +8,10 @@ public class MushroomBullet : MonoBehaviour {
 	public float subBulletSpeed;
 	public int subBulletCount;
 	public float rotateSpeed;
+	public bool selfDestroy = false;
+	public float selfDestroyDelay = 0;
 
-	public void DestroyBulletByWall() {
+	public void DestroyMushroomBullet() {
 		float delta = 360/(float)subBulletCount;
 
 		for (int i = 0; i < subBulletCount; i++) {

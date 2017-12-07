@@ -11,6 +11,13 @@ public class BossAI_1stage : MonoBehaviour {
 	public float defaultShot1Delay = 2;
 	public float defaultShot1SectorDelta = 15;
 
+	public GameObject laserBullet;
+	public float laserBulletSpeed = 1;
+	public int laserCount = 5;
+	public float laserAngle = 15;
+	public float laserRemainTime = 2f;
+	public float laserBulletDelay = 0.5f;
+
 	public GameObject seedBulletObj;
 	public float defaultShot2Speed = 5;
 	public float defaultShot2Delay = 8;
@@ -94,26 +101,50 @@ public class BossAI_1stage : MonoBehaviour {
 
 	IEnumerator DefaultShot1() {
 		while (true) {
-			GameObject upperBullet = Instantiate(crossbowBulletObj, transform.position, Quaternion.identity) as GameObject;
-			GameObject midBullet = Instantiate(crossbowBulletObj, transform.position, Quaternion.identity) as GameObject;
-			GameObject lowerBullet = Instantiate(crossbowBulletObj, transform.position, Quaternion.identity) as GameObject;
+		List<GameObject> bullets = new List<GameObject>();
 
-			Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
-			float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
+		Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
+		float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
 
-			upperBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 - defaultShot1SectorDelta);
-			midBullet.GetComponent<Bullet>().direction = deltaVector;
-			lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(delta + 180 + defaultShot1SectorDelta);
+		if (laserCount % 2 != 0) {
+			GameObject midBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180);
+			bullets.Add(midBullet);
+			
+			for (int i = 0; i < laserCount/2; i++) {
+				GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				GameObject lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - laserAngle * (i + 1));
+				lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + laserAngle * (i + 1));
+				bullets.Add(upperBullet);
+				bullets.Add(lowerBullet);
+			}
+		}
+		else {
+			GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+			GameObject lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+			upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - laserAngle/2f);
+			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + laserAngle/2f);
+			bullets.Add(upperBullet);
+			bullets.Add(lowerBullet);
+			
+			for (int i = 0; i < laserCount/2; i++) {
+				upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
+				upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - laserAngle * (i + 0.5f));
+				lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + laserAngle * (i + 0.5f));
+				bullets.Add(upperBullet);
+				bullets.Add(lowerBullet);
+			}
+		}
 
-			upperBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
-			midBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
-			lowerBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
-
-			upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - defaultShot1SectorDelta);
-			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
-			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + defaultShot1SectorDelta);
-
-			yield return new WaitForSeconds(defaultShot1Delay);
+		bullets.ForEach(bullet => {
+			bullet.transform.parent = transform;
+			LaserBullet lb = bullet.GetComponent<LaserBullet>();
+			lb.speed = laserBulletSpeed;
+			lb.remainTime = laserRemainTime;
+		});
+		yield return new WaitForSeconds(defaultShot1Delay);
 		}
 	}
 
