@@ -97,7 +97,7 @@ public class BossAI_1Bstage : MonoBehaviour {
 
 		float bulletSpeed = spreadBulletSpeed;
 		if (trailPlayer.IsSlow) bulletSpeed /= 2f;
-		bullets.ForEach(bullet => bullet.GetComponent<Bullet>().speed = spreadBulletSpeed);
+		bullets.ForEach(bullet => bullet.GetComponent<Bullet>().speed = bulletSpeed);
 
 		float bulletRotateAngle = spreadBulletRotateAngle;
 		if (trailPlayer.IsSlow) bulletRotateAngle /= 2f;
