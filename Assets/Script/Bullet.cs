@@ -23,8 +23,15 @@ public class Bullet : MonoBehaviour {
 		}
 		else if (GetComponent<MushroomBullet>() != null) {
 			if (Mathf.Abs(transform.position.x) > 9.5f || Mathf.Abs(transform.position.y) > 5.5f) {
-				GetComponent<MushroomBullet>().DestroyBulletByWall();
+				GetComponent<MushroomBullet>().DestroyMushroomBullet();
 			}
+			else if(GetComponent<MushroomBullet>().selfDestroy == true)
+			{
+				if(transform.position.x > GetComponent<MushroomBullet>().selfDestroyDelay - 6){
+					GetComponent<MushroomBullet>().DestroyMushroomBullet();
+				}
+			}
+			
 		}
 	}
 
