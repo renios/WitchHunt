@@ -8,6 +8,7 @@ using System.Linq;
 public class Player : MonoBehaviour {
 
 	public bool trailActive;
+	public bool shotActive;
 
 	public int maxHp = 3;
 	public GameObject hpOrb;
@@ -127,6 +128,8 @@ public class Player : MonoBehaviour {
 		if (!Input.GetKeyDown(KeyCode.X)) return;
 		if (currentBomb <= 0) return; 
 
+		if (!shotActive) return;
+
 		ShotBomb();
 	}
 
@@ -138,6 +141,8 @@ public class Player : MonoBehaviour {
 
 		if (!Input.GetKey(KeyCode.Z)) return;
 		if (lastShotTime < shotDelay) return;
+
+		if (!shotActive) return;
 
 		if (IsSlow()) {
 			ShotStraightStrong();

@@ -6,15 +6,34 @@ using System.Linq;
 
 public class TextManager : MonoBehaviour {
 
+	public enum DialogueState {
+		Prologue,
+		AfterPrologue,
+		Before,
+		Ingame,
+		After,
+		Epilogue
+	}
+
+	public DialogueState dialogueState;
+	int dialogueIndex = 0;
+
 	public TextAsset prologueTextFile;
 	public TextAsset dialogueBeforeStageTextFile;
 
+	public Canvas prologueCanvas;
 	public Text prologueTextUI;
 	public Image leftDialogueImage;
 	public Image rightDialogueImage;
 
 	void PrintPrologueText() {
+		prologueCanvas.gameObject.SetActive(true);
 		prologueTextUI.text = prologueTextFile.text;
+	}
+
+	void HidePrologueText() {
+		prologueTextUI.text = "";
+		prologueCanvas.gameObject.SetActive(false);
 	}
 
 	List<string> SplitTextToLine(TextAsset ta) {
@@ -22,15 +41,17 @@ public class TextManager : MonoBehaviour {
 		return lines.ToList();
 	}
 
-	int dialogueIndex = 0;
-
 	void PrintDialogue(List<string> dialogueList) {
 		leftDialogueImage.enabled = false;
 		rightDialogueImage.enabled = false;
 		leftDialogueImage.GetComponentInChildren<Text>().text = "";
 		rightDialogueImage.GetComponentInChildren<Text>().text = "";
 
-		if (!(dialogueIndex < dialogueList.Count)) return;
+		if (!(dialogueIndex < dialogueList.Count)) {
+			dialogueState = DialogueState.Ingame;
+			FindObjectOfType<Player>().shotActive = true;
+			return;
+		}
 
 		string[] splitedLine = dialogueList[dialogueIndex].Split('_');
 		if (splitedLine.Length < 2) return;
@@ -48,16 +69,30 @@ public class TextManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// PrintPrologueText();
-		dialogueList = SplitTextToLine(dialogueBeforeStageTextFile);
-		PrintDialogue(dialogueList);
+		dialogueState = DialogueState.Prologue;
+		FindObjectOfType<Player>().shotActive = false;
+		PrintPrologueText();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Z)) {
-			dialogueIndex += 1;
-			PrintDialogue(dialogueList);
+		if (dialogueState == DialogueState.Prologue) {
+			if (Input.GetKeyDown(KeyCode.Z)) {
+				HidePrologueText();
+
+				dialogueState = DialogueState.Before;
+				dialogueList = SplitTextToLine(dialogueBeforeStageTextFile);
+				PrintDialogue(dialogueList);
+			}
 		}
+		
+		else if (dialogueState == DialogueState.Before) {
+			if (Input.GetKeyDown(KeyCode.Z)) {
+				dialogueIndex += 1;
+				PrintDialogue(dialogueList);
+			}
+		}
+
+		// else if ()
 	}
 }
