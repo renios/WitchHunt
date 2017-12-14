@@ -8,7 +8,6 @@ public class TextManager : MonoBehaviour {
 
 	public enum DialogueState {
 		Prologue,
-		AfterPrologue,
 		Before,
 		Ingame,
 		After,
@@ -20,18 +19,21 @@ public class TextManager : MonoBehaviour {
 
 	public TextAsset prologueTextFile;
 	public TextAsset dialogueBeforeStageTextFile;
+	public TextAsset dialogueAfterStageTextFile;
+	public TextAsset epilogueTextFile;
 
 	public Canvas prologueCanvas;
 	public Text prologueTextUI;
 	public Image leftDialogueImage;
 	public Image rightDialogueImage;
+	public Image midNarrationImage;
 
-	void PrintPrologueText() {
+	void ShowCanvas(string text) {
 		prologueCanvas.gameObject.SetActive(true);
-		prologueTextUI.text = prologueTextFile.text;
+		prologueTextUI.text = text;
 	}
 
-	void HidePrologueText() {
+	void HideCanvas() {
 		prologueTextUI.text = "";
 		prologueCanvas.gameObject.SetActive(false);
 	}
@@ -44,12 +46,21 @@ public class TextManager : MonoBehaviour {
 	void PrintDialogue(List<string> dialogueList) {
 		leftDialogueImage.enabled = false;
 		rightDialogueImage.enabled = false;
+		midNarrationImage.enabled = false;
 		leftDialogueImage.GetComponentInChildren<Text>().text = "";
 		rightDialogueImage.GetComponentInChildren<Text>().text = "";
+		midNarrationImage.GetComponentInChildren<Text>().text = "";
 
 		if (!(dialogueIndex < dialogueList.Count)) {
-			dialogueState = DialogueState.Ingame;
-			FindObjectOfType<Player>().shotActive = true;
+			if (dialogueState == DialogueState.Before) {
+				dialogueIndex = -1;
+				dialogueState = DialogueState.Ingame;
+				FindObjectOfType<Player>().shotActive = true;
+			}
+			else if (dialogueState == DialogueState.After) {
+				dialogueState = DialogueState.Epilogue;
+				ShowCanvas(epilogueTextFile.text);
+			}
 			return;
 		}
 
@@ -63,6 +74,10 @@ public class TextManager : MonoBehaviour {
 			rightDialogueImage.enabled = true;
 			rightDialogueImage.GetComponentInChildren<Text>().text = splitedLine[1];
 		}
+		else if (splitedLine[0] == "M") {
+			midNarrationImage.enabled = true;
+			midNarrationImage.GetComponentInChildren<Text>().text = splitedLine[1];
+		}
 	} 
 
 	List<string> dialogueList;
@@ -71,14 +86,14 @@ public class TextManager : MonoBehaviour {
 	void Start () {
 		dialogueState = DialogueState.Prologue;
 		FindObjectOfType<Player>().shotActive = false;
-		PrintPrologueText();
+		ShowCanvas(prologueTextFile.text);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (dialogueState == DialogueState.Prologue) {
 			if (Input.GetKeyDown(KeyCode.Z)) {
-				HidePrologueText();
+				HideCanvas();
 
 				dialogueState = DialogueState.Before;
 				dialogueList = SplitTextToLine(dialogueBeforeStageTextFile);
@@ -93,6 +108,17 @@ public class TextManager : MonoBehaviour {
 			}
 		}
 
-		// else if ()
+		else if (dialogueState == DialogueState.After) {
+			if (dialogueIndex == -1) {
+				FindObjectOfType<Player>().shotActive = false;
+				dialogueList = SplitTextToLine(dialogueAfterStageTextFile);
+				dialogueIndex = 0;
+				PrintDialogue(dialogueList);
+			}
+			else if (Input.GetKeyDown(KeyCode.Z)) {
+				dialogueIndex += 1;
+				PrintDialogue(dialogueList);
+			}
+		}
 	}
 }

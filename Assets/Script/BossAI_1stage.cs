@@ -66,20 +66,34 @@ public class BossAI_1stage : MonoBehaviour {
 		StartCoroutine(DefaultShot2());
 		StartCoroutine(ChangePattern());
 	}
+
+	void StopPattern() {
+		StopAllCoroutines();
+	}
 	
 	bool isStart;
 	TextManager textManager;
+	Boss boss;
 
 	void Start () {
 		isStart = false;
 		textManager = FindObjectOfType<TextManager>();
+		boss = GetComponent<Boss>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if ((!isStart) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
-			StartCoroutine(StartPattern());
+			GetComponent<Boss>().patternCoroutine = StartCoroutine(StartPattern());
 			isStart = true;
+		}
+
+		if ((boss.currentHp < 10) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			// StopCoroutine(patternCoroutine);
+			StopPattern();
+			boss.DestroyAllBullets();
+
+			textManager.dialogueState = TextManager.DialogueState.After;
 		}
 	}
 

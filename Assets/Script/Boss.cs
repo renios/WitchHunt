@@ -2,21 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class Boss : MonoBehaviour {
 
 	public int maxHp = 120;
-	int currentHp;
+	public int currentHp;
 	public Image hpCircleImage;
+
+	public Coroutine patternCoroutine;
+	TextManager textManager;
 
 	// Use this for initialization
 	void Start () {
+		textManager = FindObjectOfType<TextManager>();
 		InitializeBossHp();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		// if ((currentHp < 10) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+		// 	// StopCoroutine(patternCoroutine);
+		// 	DestroyAllBullets();
+
+		// 	textManager.dialogueState = TextManager.DialogueState.After;
+		// }
+	}
+
+	public void DestroyAllBullets() {
+		GameObject.FindGameObjectsWithTag("EnemyBullet").ToList().ForEach(bullet => Destroy(bullet));
 	}
 
 	void InitializeBossHp() {
