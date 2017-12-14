@@ -30,6 +30,9 @@ public class Boss : MonoBehaviour {
 	}
 
 	public void DestroyAllBullets() {
+		if (GameObject.Find("TrapBullets(Clone)") != null) {
+			Destroy(GameObject.Find("TrapBullets(Clone)"));
+		}
 		GameObject.FindGameObjectsWithTag("EnemyBullet").ToList().ForEach(bullet => Destroy(bullet));
 	}
 
