@@ -148,17 +148,40 @@ public class BossAI_2Astage : MonoBehaviour {
 	public bool pattern2;
 	public bool pattern3;
 
-	// Use this for initialization
-	IEnumerator Start () {
+	IEnumerator StartPattern() {
 		yield return new WaitForSeconds(preDelay);
 
 		if (pattern1) StartCoroutine(Pattern1());
 		if (pattern2) StartCoroutine(Pattern2());
 		if (pattern3) StartCoroutine(Pattern3());
 	}
+
+	void StopPattern() {
+		StopAllCoroutines();
+	}
+	
+	bool isStart;
+	TextManager textManager;
+	Boss boss;
+
+	void Start () {
+		isStart = false;
+		textManager = FindObjectOfType<TextManager>();
+		boss = GetComponent<Boss>();
+	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if ((!isStart) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			GetComponent<Boss>().patternCoroutine = StartCoroutine(StartPattern());
+			isStart = true;
+		}
+
+		if ((boss.currentHp < 10) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			StopPattern();
+			boss.DestroyAllBullets();
+
+			textManager.dialogueState = TextManager.DialogueState.After;
+		}
 	}
 }
