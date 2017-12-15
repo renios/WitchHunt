@@ -270,13 +270,43 @@ public class BossAI_1Bstage : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	IEnumerator Start () {
-		player = FindObjectOfType<Player>();
-		trailPlayer = FindObjectOfType<TrailPlayer>();
-		
+	IEnumerator StartPattern () {
 		yield return new WaitForSeconds(preDelay);
 		StartCoroutine(DefaultPattern());
 		StartCoroutine(ChangePattern());
+	}
+
+	void StopPattern() {
+		StopAllCoroutines();
+	}
+	
+	bool isStart;
+	bool isEnd;
+	TextManager textManager;
+	Boss boss;
+
+	void Start () {
+		isStart = false;
+		isEnd = false;
+		textManager = FindObjectOfType<TextManager>();
+		boss = GetComponent<Boss>();
+
+		player = FindObjectOfType<Player>();
+		trailPlayer = FindObjectOfType<TrailPlayer>();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if ((!isStart) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			GetComponent<Boss>().patternCoroutine = StartCoroutine(StartPattern());
+			isStart = true;
+		}
+
+		if ((!isEnd) && (textManager.dialogueState == TextManager.DialogueState.After)) {
+			StopPattern();
+			boss.DestroyAllBullets();
+			isEnd = true;
+		}
 	}
 
 	// 기본공격: 유도 레이저탄(고속) / 유도 원형탄(저속)
@@ -335,10 +365,5 @@ public class BossAI_1Bstage : MonoBehaviour {
 		while (true){
 			yield return StartCoroutine(ShotTrapCoroutine());
 		}
-	}
-
-	// Update is called once per frame
-	void Update () {
-
 	}
 }

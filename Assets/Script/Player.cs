@@ -10,16 +10,18 @@ public class Player : MonoBehaviour {
 	public bool trailActive;
 	public bool shotActive;
 
-	public int maxHp = 3;
+	public int maxHp = 5;
 	public GameObject hpOrb;
 	int currentHp;
-	List<Image> hpOrbImages;
+	List<GameObject> hpOrbs;
+	GameObject playerHpPanel;
 
 	public int maxBomb = 3;
 	public int initBomb = 2;
-	public GameObject bombOrb;
+	public GameObject bomb;
 	int currentBomb;
-	List<Image> bombImages;
+	List<GameObject> bombs;
+	GameObject playerBombPanel;
 	public int bombDamage;
 
 	public float defaultSpeed;
@@ -75,26 +77,25 @@ public class Player : MonoBehaviour {
 	}
 
 	void InitializePlayerHp() {
-		hpOrbImages = new List<Image>();
-		GameObject playerHpPanel = GameObject.Find("PlayerHpPanel");
+		hpOrbs = new List<GameObject>();
 		currentHp = maxHp;
 		for(int i = 0; i < maxHp; i++) {
 			GameObject newHpOrb = Instantiate(hpOrb) as GameObject;
 			newHpOrb.transform.SetParent(playerHpPanel.transform);
 			newHpOrb.transform.localScale = new Vector3(1,1,1);
-			hpOrbImages.Insert(i, newHpOrb.GetComponent<Image>());
+			hpOrbs.Add(newHpOrb);
 		}
+		UpdatePlayerHpUI();
 	}
 
 	void InitializePlayerBomb() {
-		bombImages = new List<Image>();
-		GameObject playerBombPanel = GameObject.Find("PlayerBombPanel");
+		bombs = new List<GameObject>();
 		currentBomb = initBomb;
 		for(int i = 0; i < maxBomb; i++) {
-			GameObject newBombOrb = Instantiate(bombOrb) as GameObject;
-			newBombOrb.transform.SetParent(playerBombPanel.transform);
-			newBombOrb.transform.localScale = new Vector3(1,1,1);
-			bombImages.Insert(i, newBombOrb.GetComponent<Image>());
+			GameObject newBomb = Instantiate(bomb) as GameObject;
+			newBomb.transform.SetParent(playerBombPanel.transform);
+			newBomb.transform.localScale = new Vector3(1,1,1);
+			bombs.Add(newBomb);
 		}
 		UpdatePlayerBombUI();
 	}
@@ -104,6 +105,9 @@ public class Player : MonoBehaviour {
 		lastShotTime = 0;
 		if (trailActive) 
 			InputTrailer.InitializeInputTrailer();
+
+		playerHpPanel = GameObject.Find("PlayerHpPanel");
+		playerBombPanel = GameObject.Find("PlayerBombPanel");
 
 		InitializePlayerHp();
 		InitializePlayerBomb();
@@ -198,20 +202,24 @@ public class Player : MonoBehaviour {
 	}
 
 	void UpdatePlayerHpUI() {
+		hpOrbs.ForEach(orb => Destroy(orb));
+		
 		for (int i = 0; i < currentHp; i++) {
-			hpOrbImages[i].enabled = true;
-		}
-		for (int i = currentHp; i < maxHp; i++) {
-			hpOrbImages[i].enabled = false;
+			GameObject newHpOrb = Instantiate(hpOrb);
+			newHpOrb.transform.SetParent(playerHpPanel.transform);
+			newHpOrb.transform.localScale = new Vector3(1,1,1);
+			hpOrbs.Add(newHpOrb);
 		}
 	}
 
 	void UpdatePlayerBombUI() {
+		bombs.ForEach(bomb => Destroy(bomb));
+		
 		for (int i = 0; i < currentBomb; i++) {
-			bombImages[i].enabled = true;
-		}
-		for (int i = currentBomb; i < maxBomb; i++) {
-			bombImages[i].enabled = false;
+			GameObject newBomb = Instantiate(bomb);
+			newBomb.transform.SetParent(playerBombPanel.transform);
+			newBomb.transform.localScale = new Vector3(1,1,1);
+			bombs.Add(newBomb);
 		}
 	}
 }
