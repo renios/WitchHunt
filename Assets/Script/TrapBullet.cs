@@ -28,6 +28,7 @@ public class TrapBullet : MonoBehaviour {
 	}
 
 	public void InactiveNow() {
+		StopAllCoroutines();
 		GetComponent<SpriteRenderer>().color = new Color(1,1,1,0);
 		coll.enabled = false;
 		isActive = false;

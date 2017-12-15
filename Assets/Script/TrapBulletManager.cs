@@ -13,6 +13,7 @@ public class TrapBulletManager : MonoBehaviour {
 	// Use this for initialization
 	IEnumerator Start () {
 		trapBullets = FindObjectsOfType<TrapBullet>().ToList();
+		trapBullets = RemainOnlyChildren(trapBullets);
 		yield return new WaitForSeconds(FindObjectOfType<TrapBullet>().activeDelay);
 		StartCoroutine(Move());
 	}
@@ -20,6 +21,11 @@ public class TrapBulletManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	List<TrapBullet> RemainOnlyChildren(List<TrapBullet> bullets) {
+		List<TrapBullet> children = new List<TrapBullet>();
+		return bullets.FindAll(bullet => bullet.transform.parent == gameObject.transform);
 	}
 
 	IEnumerator Move() {
