@@ -60,16 +60,41 @@ public class BossAI_1stage : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	IEnumerator Start () {
+	IEnumerator StartPattern () {
 		yield return new WaitForSeconds(preDelay);
 		StartCoroutine(DefaultShot1());
 		StartCoroutine(DefaultShot2());
 		StartCoroutine(ChangePattern());
 	}
+
+	void StopPattern() {
+		StopAllCoroutines();
+	}
+	
+	bool isStart;
+	TextManager textManager;
+	Boss boss;
+
+	void Start () {
+		isStart = false;
+		textManager = FindObjectOfType<TextManager>();
+		boss = GetComponent<Boss>();
+	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if ((!isStart) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			GetComponent<Boss>().patternCoroutine = StartCoroutine(StartPattern());
+			isStart = true;
+		}
+
+		if ((boss.currentHp < 10) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			// StopCoroutine(patternCoroutine);
+			StopPattern();
+			boss.DestroyAllBullets();
+
+			textManager.dialogueState = TextManager.DialogueState.After;
+		}
 	}
 
 	// 특수패턴 1 - 격자탄막
