@@ -22,16 +22,7 @@ public class PlayerCollider : MonoBehaviour {
 		if (other.tag == "EnemyBullet") {
 			player.Damaged();
 
-			Collider2D[] enemyBulletColliders = Physics2D.OverlapCircleAll(transform.position, Camera.main.orthographicSize / 2.0f);
-			if (enemyBulletColliders.ToList().Any(coll => coll.tag == "EnemyBullet")) {
-				Instantiate(hitParticle, transform.position, Quaternion.identity);
-			}
-			enemyBulletColliders.ToList().ForEach(coll => {
-				if (coll.tag == "EnemyBullet") {
-					if (coll.GetComponent<LaserBullet>() == null)
-						coll.GetComponent<Bullet>().DestroyBullet();
-				}
-			});
+			Instantiate(hitParticle, transform.position, Quaternion.identity);
 		}
 	}
 
