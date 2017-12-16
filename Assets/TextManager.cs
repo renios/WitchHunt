@@ -62,7 +62,9 @@ public class TextManager : MonoBehaviour {
 			if (dialogueState == DialogueState.Before) {
 				dialogueIndex = -1;
 				dialogueState = DialogueState.Ingame;
-				FindObjectOfType<Player>().shotActive = true;
+				Player player = FindObjectOfType<Player>();
+				player.shotActive = true;
+				player.moveActive = true;
 			}
 			else if (dialogueState == DialogueState.After) {
 				dialogueState = DialogueState.Epilogue;
@@ -92,7 +94,9 @@ public class TextManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		dialogueState = DialogueState.Prologue;
-		FindObjectOfType<Player>().shotActive = false;
+		Player player = FindObjectOfType<Player>();
+		player.shotActive = false;
+		player.moveActive = false;
 		ShowCanvas(prologueTextFile.text);
 	}
 	
@@ -117,7 +121,9 @@ public class TextManager : MonoBehaviour {
 
 		else if (dialogueState == DialogueState.After) {
 			if (dialogueIndex == -1) {
-				FindObjectOfType<Player>().shotActive = false;
+				Player player = FindObjectOfType<Player>();
+				player.shotActive = false;
+				player.moveActive = false;
 				dialogueList = SplitTextToLine(dialogueAfterStageTextFile);
 				dialogueIndex = 0;
 				PrintDialogue(dialogueList);

@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 
 	public bool trailActive;
 	public bool shotActive;
+	public bool moveActive;
 
 	public int maxHp = 5;
 	public GameObject hpOrb;
@@ -161,6 +162,10 @@ public class Player : MonoBehaviour {
 
 	void Move() {
 		float speed = defaultSpeed;
+
+		// 대화중에는 못움직임
+		if (!moveActive)
+			speed = 0;
 		
 		// shift키 입력시 저속이동
 		if (IsSlow()) 
