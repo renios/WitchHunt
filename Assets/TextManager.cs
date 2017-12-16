@@ -11,7 +11,8 @@ public class TextManager : MonoBehaviour {
 		Before,
 		Ingame,
 		After,
-		Epilogue
+		Epilogue,
+		Gameover
 	}
 
 	public DialogueState dialogueState;
@@ -28,6 +29,8 @@ public class TextManager : MonoBehaviour {
 	public Image rightDialogueImage;
 	public Image midNarrationImage;
 
+	public Canvas gameoverCanvas;
+
 	void ShowCanvas(string text) {
 		prologueCanvas.gameObject.SetActive(true);
 		prologueTextUI.text = text;
@@ -36,6 +39,10 @@ public class TextManager : MonoBehaviour {
 	void HideCanvas() {
 		prologueTextUI.text = "";
 		prologueCanvas.gameObject.SetActive(false);
+	}
+
+	void ShowGameoverCanvas() {
+		gameoverCanvas.gameObject.SetActive(true);
 	}
 
 	List<string> SplitTextToLine(TextAsset ta) {
@@ -119,6 +126,14 @@ public class TextManager : MonoBehaviour {
 				dialogueIndex += 1;
 				PrintDialogue(dialogueList);
 			}
+		}
+
+		else if ((dialogueState == DialogueState.Gameover) && !gameoverCanvas.gameObject.activeInHierarchy) {
+			Player player = FindObjectOfType<Player>();
+			player.shotActive = false;
+			player.GetComponent<Rigidbody2D>().gravityScale = 1;
+			ShowGameoverCanvas();
+			
 		}
 	}
 }
