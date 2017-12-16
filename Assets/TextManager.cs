@@ -128,12 +128,8 @@ public class TextManager : MonoBehaviour {
 			}
 		}
 
-		else if ((dialogueState == DialogueState.Gameover) && !gameoverCanvas.gameObject.activeInHierarchy) {
-			Player player = FindObjectOfType<Player>();
-			player.shotActive = false;
-			player.GetComponent<Rigidbody2D>().gravityScale = 1;
-			ShowGameoverCanvas();
-			
+		else if ((dialogueState == DialogueState.Gameover) && !gameoverCanvas.gameObject.activeInHierarchy) {	
+			Invoke("ShowGameoverCanvas", 1f);
 		}
 	}
 }

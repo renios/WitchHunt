@@ -32,5 +32,9 @@ public class DestUI : MonoBehaviour {
 			textManager.dialogueState = TextManager.DialogueState.After;
 			isEnd = true;
 		}
+
+		if ((!isEnd) && textManager.dialogueState == TextManager.DialogueState.Gameover) {
+			isEnd = true;
+		}
 	}
 }

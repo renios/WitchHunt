@@ -16,6 +16,8 @@ public class Player : MonoBehaviour {
 	List<GameObject> hpOrbs;
 	GameObject playerHpPanel;
 
+	bool isDead = false;
+
 	public int maxBomb = 3;
 	public int initBomb = 2;
 	public GameObject bomb;
@@ -199,6 +201,14 @@ public class Player : MonoBehaviour {
 		currentHp -= 1;
 		if (currentHp < 0) currentHp = 0;
 		UpdatePlayerHpUI();
+
+		if ((currentHp == 0) && (!isDead)) {
+			TextManager textManager = FindObjectOfType<TextManager>();
+			textManager.dialogueState = TextManager.DialogueState.Gameover;
+			shotActive = false;
+			GetComponent<Rigidbody2D>().gravityScale = 1;
+			GetComponentsInChildren<Collider2D>().ToList().ForEach(coll => Destroy(coll));
+		}
 	}
 
 	void UpdatePlayerHpUI() {
