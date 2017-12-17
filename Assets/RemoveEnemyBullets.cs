@@ -6,21 +6,28 @@ using System.Linq;
 public class RemoveEnemyBullets : MonoBehaviour {
 
 	float radius;
+	public float lifeTime;
 
 	// Use this for initialization
 	void Start () {
 		radius = GetComponent<CircleCollider2D>().radius;
 
-		Destroy(gameObject, 0.8f);
+		if (lifeTime != 0)
+			Destroy(gameObject, lifeTime);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Collider2D[] enemyBulletColliders = Physics2D.OverlapCircleAll(transform.position, radius);
-		if (enemyBulletColliders.ToList().Any(coll => coll.tag == "EnemyBullet")) {
-			// Instantiate(hitParticle, transform.position, Quaternion.identity);
+		Collider2D[] enemyBulletCollidersArray = Physics2D.OverlapCircleAll(transform.position, radius);
+		List<Collider2D> enemyBulletColliders = enemyBulletCollidersArray.ToList();
+
+		if (gameObject.tag == "MushroomBomb") {
+			enemyBulletColliders = enemyBulletColliders.FindAll(
+				coll => coll.GetComponent<MushroomBullet>() == null
+			);
 		}
-		enemyBulletColliders.ToList().ForEach(coll => {
+
+		enemyBulletColliders.ForEach(coll => {
 			if (coll.tag == "EnemyBullet") {
 				if (coll.GetComponent<LaserBullet>() == null)
 					coll.GetComponent<Bullet>().DestroyBullet();

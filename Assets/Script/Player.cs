@@ -37,6 +37,7 @@ public class Player : MonoBehaviour {
 	int currentFrame = 0;
 
 	public GameObject bullet;
+	public GameObject bombObj;
 
 	bool IsSlow() {
 		return Input.GetKey(KeyCode.LeftShift);
@@ -45,12 +46,17 @@ public class Player : MonoBehaviour {
 	void ShotBomb() {
 		currentBomb -= 1;
 		UpdatePlayerBombUI();
-		FindObjectsOfType<Bullet>().ToList().ForEach(bullet => {
-			if (bullet.tag == "EnemyBullet") {
-				bullet.DestroyBullet();
-			}
-		});
-		FindObjectOfType<Boss>().Damaged(bombDamage);
+		if (bombObj == null) {
+			FindObjectsOfType<Bullet>().ToList().ForEach(bullet => {
+				if (bullet.tag == "EnemyBullet") {
+					bullet.DestroyBullet();
+				}
+			});
+			FindObjectOfType<Boss>().Damaged(bombDamage);
+		}
+		else {
+			Instantiate(bombObj, transform.position, Quaternion.identity);
+		}
 	}
 
 	void ShotSector() {
