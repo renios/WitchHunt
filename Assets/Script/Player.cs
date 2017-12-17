@@ -131,6 +131,16 @@ public class Player : MonoBehaviour {
 		Move();
 		Shot();
 		Bomb();
+
+		if (Input.GetKeyDown(KeyCode.B)) {
+			currentBomb = maxBomb;
+			UpdatePlayerBombUI();
+		}
+
+		if (Input.GetKeyDown(KeyCode.H)) {
+			currentHp = maxHp;
+			UpdatePlayerHpUI();
+		}
 	}
 
 	void Bomb() {
