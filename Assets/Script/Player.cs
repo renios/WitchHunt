@@ -70,6 +70,9 @@ public class Player : MonoBehaviour {
 		midBullet.GetComponent<Bullet>().direction = Vector3.right;
 		lowerBullet.GetComponent<Bullet>().direction = Utility.GetUnitVector(-sectorDelta);
 
+		upperBullet.transform.rotation *= Quaternion.Euler(0,0,sectorDelta);
+		lowerBullet.transform.rotation *= Quaternion.Euler(0,0,-sectorDelta);
+
 		upperBullet.tag = "PlayerBullet";
 		midBullet.tag = "PlayerBullet";
 		lowerBullet.tag = "PlayerBullet";
@@ -80,7 +83,7 @@ public class Player : MonoBehaviour {
 		midBullet.GetComponent<Bullet>().direction = Vector3.right;
 		midBullet.GetComponent<Bullet>().damage *= damageCoef;
 
-		midBullet.transform.localScale *= 2;
+		midBullet.transform.localScale *= 1.5f;
 
 		midBullet.tag = "PlayerBullet";
 	}
