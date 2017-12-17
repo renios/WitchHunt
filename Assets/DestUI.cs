@@ -16,6 +16,7 @@ public class DestUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		textManager = FindObjectOfType<TextManager>();
+		slider.value = 0;
 	}
 	
 	// Update is called once per frame

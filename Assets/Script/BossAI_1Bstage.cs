@@ -298,11 +298,13 @@ public class BossAI_1Bstage : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if ((!isStart) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+			GetComponent<TrailPlayer>().StartPattern();
 			GetComponent<Boss>().patternCoroutine = StartCoroutine(StartPattern());
 			isStart = true;
 		}
 
 		if ((!isEnd) && (textManager.dialogueState == TextManager.DialogueState.After)) {
+			GetComponent<TrailPlayer>().StopPattern();
 			StopPattern();
 			boss.DestroyAllBullets();
 			isEnd = true;

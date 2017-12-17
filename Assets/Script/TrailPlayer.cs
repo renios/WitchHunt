@@ -60,13 +60,21 @@ public class TrailPlayer : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	IEnumerator Start () {
+	public IEnumerator StartTrail () {
 		player = FindObjectOfType<Player>();
 		
 		yield return new WaitForSeconds(1);
 
 		if (InputTrailer.moveInput != null)
 			StartCoroutine (MoveByTrail());
+	}
+
+	public void StartPattern() {
+		StartCoroutine(StartTrail());
+	}
+
+	public void StopPattern() {
+		StopAllCoroutines();
 	}
 
 	// Update is called once per frame
