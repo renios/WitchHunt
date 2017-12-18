@@ -9,25 +9,31 @@ public class MusicManager : MonoBehaviour {
 	GameObject gameMusic;
 	GameObject gameMusicOnPlay;
 
-	bool changeMusic = false;
+	public bool changeMusic = false;
   
 	public static MusicManager Instance {
 		get {return instance;}
 	}
 // Use this for initialization
     void Awake () {
-		if (instance != null && instance != this){
-			Destroy(this.gameObject);
+		gameMusic = GameObject.Find("GameMusic");
+		if ((instance != null && instance != this) && gameMusic.GetComponent<AudioSource>().clip.name != this.GetComponent<AudioSource>().clip.name){
+			gameMusic.GetComponent<AudioSource>().clip = this.GetComponent<AudioSource>().clip;
+			gameMusic.GetComponent<MusicManager>().changeMusic = true;
+			Destroy(gameMusic.gameObject);
 			return;
 		}
 		else{
 			instance = this;
 		}
-		gameMusic = GameObject.Find("GameMusic");
-		if(gameMusicOnPlay == null || gameMusic.GetComponent<AudioSource>().clip.name != gameMusicOnPlay.GetComponent<AudioSource>().clip.name)
+		
+		if(gameMusicOnPlay == null)
 		{
 			gameMusicOnPlay = gameMusic;
 			changeMusic = true;
+		}
+		if (gameMusic == null){
+			Debug.Log("gameMusic null\n");
 		}
 		DontDestroyOnLoad(this.gameObject);
 	}
