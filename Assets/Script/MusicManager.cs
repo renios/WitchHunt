@@ -20,12 +20,17 @@ public class MusicManager : MonoBehaviour {
 		if ((instance != null && instance != this) && gameMusic.GetComponent<AudioSource>().clip.name != this.GetComponent<AudioSource>().clip.name){
 			gameMusic.GetComponent<AudioSource>().clip = this.GetComponent<AudioSource>().clip;
 			gameMusic.GetComponent<MusicManager>().changeMusic = true;
-			Destroy(gameMusic.gameObject);
+			Destroy(this.gameObject);
+			return;
+		}
+		else if ((instance != null && instance != this) && gameMusic.GetComponent<AudioSource>().clip.name == this.GetComponent<AudioSource>().clip.name){
+			Destroy(this.gameObject);
 			return;
 		}
 		else{
 			instance = this;
 		}
+		
 		
 		if(gameMusicOnPlay == null)
 		{
