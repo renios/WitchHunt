@@ -44,6 +44,7 @@ public class Player : MonoBehaviour {
 	float noDamagedTime;
 	float damagedDelay = 0.5f;
 
+	// 사운드
 	public GameObject GameSE;
 	SEManager SEPlayer;
 
@@ -138,6 +139,7 @@ public class Player : MonoBehaviour {
 		InitializePlayerHp();
 		InitializePlayerBomb();
 
+		GameSE = GameObject.Find("GameSE");
 		SEPlayer = GameSE.GetComponent<SEManager>();
 	}
 	
