@@ -139,7 +139,6 @@ public class Player : MonoBehaviour {
 		InitializePlayerHp();
 		InitializePlayerBomb();
 
-		GameSE = GameObject.Find("GameSE");
 		SEPlayer = GameSE.GetComponent<SEManager>();
 	}
 	

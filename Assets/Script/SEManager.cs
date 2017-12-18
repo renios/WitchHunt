@@ -5,19 +5,15 @@ using UnityEngine;
 public class SEManager : MonoBehaviour {
 
 	public enum Sounds {Bomb, Dead, EnemyDeath, Laser, LaserAlert, PlayerShot, Select};
-	public List<AudioSource> SEList;
+	public List<AudioClip> SEList;
+	AudioSource audioSource;
 
 	int cooldown=0;
 
 	// Use this for initialization
 	void Awake () {
-		SEList[0].enabled = true;
-		SEList[1].enabled = true;
-		SEList[2].enabled = true;
-		SEList[3].enabled = true;
-		SEList[4].enabled = true;
-		SEList[5].enabled = true;
-		SEList[6].enabled = true;
+		audioSource = GetComponent<AudioSource>();
+		audioSource.enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -28,34 +24,26 @@ public class SEManager : MonoBehaviour {
 	public void Play(Sounds s){
 		switch(s){
 			case Sounds.Bomb:
-				if (SEList[0] != null)
-				SEList[0].Play();
+				audioSource.PlayOneShot(SEList[0]);
 				Debug.Log("Bomb");
 				break;
 			case Sounds.Dead:
-				if (SEList[1] != null)
-				SEList[1].Play();
+				audioSource.PlayOneShot(SEList[1]);
 				break;
 			case Sounds.EnemyDeath:
-				if (SEList[2] != null)
-				SEList[2].Play();
+				audioSource.PlayOneShot(SEList[2]);
 				break;
 			case Sounds.Laser:
-				if (SEList[3] != null)
-				SEList[3].Play();
+				audioSource.PlayOneShot(SEList[3]);
 				break;
 			case Sounds.LaserAlert:
-				if (SEList[4] != null)
-				SEList[4].Play();
+				audioSource.PlayOneShot(SEList[4]);
 				break;
 			case Sounds.PlayerShot:
-				if (SEList[5] != null)
-				SEList[5].Play();
+				audioSource.PlayOneShot(SEList[5]);
 				break;
 			case Sounds.Select:
-				if (SEList[6] != null)
-				SEList[6].Play();
-
+				audioSource.PlayOneShot(SEList[6]);
 				break;
 			default:
 				break;
