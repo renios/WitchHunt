@@ -39,6 +39,9 @@ public class Player : MonoBehaviour {
 	public GameObject bullet;
 	public GameObject bombObj;
 
+	public GameObject GameSE;
+	SEManager SEPlayer;
+
 	bool IsSlow() {
 		return Input.GetKey(KeyCode.LeftShift);
 	}
@@ -47,6 +50,7 @@ public class Player : MonoBehaviour {
 		currentBomb -= 1;
 		UpdatePlayerBombUI();
 		if (bombObj == null) {
+			SEPlayer.Play(SEManager.Sounds.Bomb);
 			FindObjectsOfType<Bullet>().ToList().ForEach(bullet => {
 				if (bullet.tag == "EnemyBullet") {
 					bullet.DestroyBullet();
@@ -123,6 +127,8 @@ public class Player : MonoBehaviour {
 
 		InitializePlayerHp();
 		InitializePlayerBomb();
+
+		SEPlayer = GameSE.GetComponent<SEManager>();
 	}
 	
 	// Update is called once per frame
