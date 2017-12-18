@@ -36,26 +36,33 @@ public class SEManager : MonoBehaviour {
 	public void Play(Sounds s){
 		switch(s){
 			case Sounds.Bomb:
-				BombSound.Play();
+				if (BombSound != null)
+					BombSound.Play();
 				Debug.Log("BombSound\n");
 				break;
 			case Sounds.Dead:
-				DeathSound.Play();
+				if (DeathSound != null)
+					DeathSound.Play();
 				break;
 			case Sounds.EnemyDeath:
-				EnemyDeathSound.Play();
+				if (EnemyDeathSound != null)
+					EnemyDeathSound.Play();
 				break;
 			case Sounds.Laser:
-				LaserSound.Play();
+				if (LaserSound != null)
+					LaserSound.Play();
 				break;
 			case Sounds.LaserAlert:
-				LaserAlertSound.Play();
+				if (LaserAlertSound != null)
+					LaserAlertSound.Play();
 				break;
 			case Sounds.PlayerShot:
-				PlayerShotSound.Play();
+				if (PlayerShotSound != null)
+					PlayerShotSound.Play();
 				break;
 			case Sounds.Select:
-				SelectSound.Play();
+				if (SelectSound != null)
+					SelectSound.Play();
 				break;
 			default:
 				break;
