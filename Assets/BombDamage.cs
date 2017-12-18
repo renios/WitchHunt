@@ -6,6 +6,7 @@ public class BombDamage : MonoBehaviour {
 
 	public int damageRatio;
 	public int damageAmount;
+	public GameObject hitParticle;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +19,12 @@ public class BombDamage : MonoBehaviour {
 
 		if (damageAmount > 0) {
 			boss.Damaged(damageAmount);
+		}
+
+		if ((damageRatio > 0 || damageAmount > 0)) {
+			if (hitParticle == null) return;
+			GameObject particle = Instantiate(hitParticle, boss.transform.position + Vector3.back * 2, Quaternion.identity);
+			Destroy(particle, 1);
 		}
 	}
 	
