@@ -21,8 +21,6 @@ public class PlayerCollider : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.tag == "EnemyBullet") {
 			player.Damaged();
-
-			Instantiate(hitParticle, transform.position, Quaternion.identity);
 		}
 	}
 

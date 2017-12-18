@@ -39,6 +39,9 @@ public class Player : MonoBehaviour {
 	public GameObject bullet;
 	public GameObject bombObj;
 
+	float noDamagedTime;
+	float damagedDelay = 0.5f;
+
 	bool IsSlow() {
 		return Input.GetKey(KeyCode.LeftShift);
 	}
@@ -115,6 +118,8 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		lastShotTime = 0;
+		noDamagedTime = 0;
+		
 		if (trailActive) 
 			InputTrailer.InitializeInputTrailer();
 
@@ -127,6 +132,9 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		lastShotTime += Time.deltaTime;
+		noDamagedTime += Time.deltaTime;
+
 		currentFrame += 1;
 		if (trailActive)
 			InputTrailer.slowInput.Add(IsSlow());
@@ -160,8 +168,6 @@ public class Player : MonoBehaviour {
 	}
 
 	void Shot() {
-		lastShotTime += Time.deltaTime;
-
 		if (trailActive)
 			InputTrailer.shotInput.Add(Input.GetKey(KeyCode.Z));
 
@@ -222,6 +228,12 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Damaged() {
+		if (noDamagedTime < damagedDelay) return;
+
+		noDamagedTime = 0;
+
+		Instantiate(FindObjectOfType<PlayerCollider>().hitParticle, transform.position, Quaternion.identity);
+
 		currentHp -= 1;
 		if (currentHp < 0) currentHp = 0;
 		UpdatePlayerHpUI();
