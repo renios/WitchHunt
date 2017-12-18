@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class FenceBullet : MonoBehaviour {
 
 	Bullet bullet;
-	SpriteRenderer sr;
+	List<SpriteRenderer> srs;
 	Collider2D coll;
 
 	public float initSpeed;
@@ -16,13 +17,12 @@ public class FenceBullet : MonoBehaviour {
 		bullet = GetComponent<Bullet>();
 		bullet.speed = initSpeed;
 
-		sr = GetComponent<SpriteRenderer>();
+		srs = GetComponentsInChildren<SpriteRenderer>().ToList();
 		coll = GetComponent<BoxCollider2D>();
 
-		sr.color = new Color(1,1,1,0);
-
-		Tween tw = sr.DOFade(1, 1);
-		yield return tw.WaitForCompletion();
+		srs.ForEach(sr => sr.color = new Color(1,1,1,0));
+		srs.ForEach(sr => sr.DOFade(1, 1));
+		yield return new WaitForSeconds(1);
 	}
 	
 	// Update is called once per frame
