@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SEManager : MonoBehaviour {
 
-	public enum Sounds {Bomb, Dead, EnemyDeath, Laser, LaserAlert, PlayerShot, Select};
+	public enum Sounds {Bomb, Dead, EnemyDeath, Laser, LaserAlert, PlayerShot, Select, Bullet1, Bullet2};
 	public List<AudioSource> SEList;
 
 	int cooldown=0;
@@ -18,6 +18,8 @@ public class SEManager : MonoBehaviour {
 		SEList[4].enabled = true;
 		SEList[5].enabled = true;
 		SEList[6].enabled = true;
+		SEList[7].enabled = true;
+		SEList[8].enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -55,7 +57,14 @@ public class SEManager : MonoBehaviour {
 			case Sounds.Select:
 				if (SEList[6] != null)
 				SEList[6].Play();
-
+				break;
+			case Sounds.Bullet1:
+				if (SEList[7] != null)
+				SEList[7].Play();
+				break;
+			case Sounds.Bullet2:
+				if (SEList[8] != null)
+				SEList[8].Play();
 				break;
 			default:
 				break;
