@@ -16,7 +16,7 @@ public class TrapBullet : MonoBehaviour {
 	}
 
 	public IEnumerator Active () {
-		GetComponent<SpriteRenderer>().DOColor(Color.white, activeDelay);
+		GetComponent<SpriteRenderer>().DOFade(1, activeDelay);
 		yield return new WaitForSeconds(activeDelay * 0.8f);
 		coll.enabled = true;
 		isActive = true;
@@ -29,13 +29,13 @@ public class TrapBullet : MonoBehaviour {
 
 	public void InactiveNow() {
 		StopAllCoroutines();
-		GetComponent<SpriteRenderer>().color = new Color(1,1,1,0);
+		GetComponent<SpriteRenderer>().DOFade(0, 0);
 		coll.enabled = false;
 		isActive = false;
 	}
 
 	public IEnumerator Inactive() {
-		GetComponent<SpriteRenderer>().DOColor(new Color(1,1,1,0), activeDelay);
+		GetComponent<SpriteRenderer>().DOFade(0, activeDelay);
 		yield return new WaitForSeconds(activeDelay * 0.5f);
 		coll.enabled = false;
 		isActive = false;

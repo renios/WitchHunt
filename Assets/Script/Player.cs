@@ -11,6 +11,8 @@ public class Player : MonoBehaviour {
 	public bool shotActive;
 	public bool moveActive;
 
+	public bool canShot = true;
+
 	public int maxHp = 5;
 	public GameObject hpOrb;
 	int currentHp;
@@ -174,6 +176,7 @@ public class Player : MonoBehaviour {
 		if (!Input.GetKey(KeyCode.Z)) return;
 		if (lastShotTime < shotDelay) return;
 
+		if (!canShot) return;
 		if (!shotActive) return;
 
 		if (IsSlow()) {

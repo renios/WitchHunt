@@ -7,6 +7,7 @@ public class BossAI_1Bstage : MonoBehaviour {
 	public float preDelay = 1;
 
 	public GameObject spreadBullet;
+	public GameObject slowSpreadBullet;
 	public float spreadBulletSpeed = 10;
 	public int spreadBulletCount = 12;
 	public float spreadBulletRotateAngle = 10;
@@ -111,7 +112,11 @@ public class BossAI_1Bstage : MonoBehaviour {
 
 		float delta = 360 / (float) bulletCount;
 		for (int i = 0; i < bulletCount; i++) {
-			GameObject bullet = Instantiate(spreadBullet, transform.position, Quaternion.identity) as GameObject;
+			GameObject bullet;
+			if (trailPlayer.IsSlow)
+				bullet = Instantiate(slowSpreadBullet, transform.position, Quaternion.identity);
+			else 
+				bullet = Instantiate(spreadBullet, transform.position, Quaternion.identity);
 			Vector3 direction = Utility.GetUnitVector(lastDelta + i * delta);
 			bullet.GetComponent<Bullet>().direction = direction;
 			bullets.Add(bullet);
@@ -142,9 +147,9 @@ public class BossAI_1Bstage : MonoBehaviour {
 		midBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
 		lowerBullet.GetComponent<Bullet>().speed = defaultShot1Speed;
 
-		upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - defaultShot1SectorDelta);
+		upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta - defaultShot1SectorDelta);
 		midBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
-		lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + defaultShot1SectorDelta);
+		lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + defaultShot1SectorDelta);
 	}
 
 	void ShotWall() {
@@ -181,9 +186,10 @@ public class BossAI_1Bstage : MonoBehaviour {
 		GameObject newBullet = Instantiate(followBullet, transform.position, Quaternion.identity) as GameObject;
 		
 		Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
-		float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
+		float delta = Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
 
 		newBullet.GetComponent<Bullet>().direction = deltaVector;
+		newBullet.GetComponent<Bullet>().speed = followBulletSpeed;
 		newBullet.transform.rotation *= Quaternion.Euler(0,0,delta);
 	}
 
