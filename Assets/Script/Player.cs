@@ -86,6 +86,7 @@ public class Player : MonoBehaviour {
 		upperBullet.tag = "PlayerBullet";
 		midBullet.tag = "PlayerBullet";
 		lowerBullet.tag = "PlayerBullet";
+
 	}
 
 	void ShotStraightStrong() {
@@ -96,6 +97,7 @@ public class Player : MonoBehaviour {
 		midBullet.transform.localScale *= 1.5f;
 
 		midBullet.tag = "PlayerBullet";
+
 	}
 
 	void InitializePlayerHp() {
@@ -245,15 +247,20 @@ public class Player : MonoBehaviour {
 		Instantiate(FindObjectOfType<PlayerCollider>().hitParticle, transform.position, Quaternion.identity);
 
 		currentHp -= 1;
+	
+		if (currentHp > 0) SEPlayer.Play(SEManager.Sounds.EnemyDeath);
+
 		if (currentHp < 0) currentHp = 0;
 		UpdatePlayerHpUI();
 
 		if ((currentHp == 0) && (!isDead)) {
+			SEPlayer.Play(SEManager.Sounds.Dead);
 			TextManager textManager = FindObjectOfType<TextManager>();
 			textManager.dialogueState = TextManager.DialogueState.Gameover;
 			shotActive = false;
 			GetComponent<Rigidbody2D>().gravityScale = 1;
 			GetComponentsInChildren<Collider2D>().ToList().ForEach(coll => Destroy(coll));
+			isDead = true;
 		}
 	}
 

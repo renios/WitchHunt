@@ -9,9 +9,13 @@ public class Bullet : MonoBehaviour {
 
 	public Vector3 direction;
 
+	AudioSource BulletSound;
+
 	// Use this for initialization
 	void Start () {
-		
+		BulletSound = gameObject.GetComponent<AudioSource>();
+		if (Random.Range(0.0f, 1.0f) < 0.3f)
+			BulletSound.Play();
 	}
 	
 	// Update is called once per frame

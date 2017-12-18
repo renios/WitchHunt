@@ -5,27 +5,19 @@ using UnityEngine;
 public class SEManager : MonoBehaviour {
 
 	public enum Sounds {Bomb, Dead, EnemyDeath, Laser, LaserAlert, PlayerShot, Select};
-	public List<AudioClip> SEList;
+	public List<AudioSource> SEList;
 
-	AudioSource BombSound;
-	AudioSource DeathSound;
-	AudioSource EnemyDeathSound;
-	AudioSource LaserSound;
-	AudioSource LaserAlertSound;
-	AudioSource PlayerShotSound;
-	AudioSource SelectSound;
-	
-
+	int cooldown=0;
 
 	// Use this for initialization
 	void Awake () {
-		BombSound.clip = SEList[0];
-		DeathSound.clip = SEList[1];
-		EnemyDeathSound.clip = SEList[2];
-		LaserSound.clip = SEList[3];
-		LaserAlertSound.clip = SEList[4];
-		PlayerShotSound.clip = SEList[5];
-		SelectSound.clip = SEList[6];
+		SEList[0].enabled = true;
+		SEList[1].enabled = true;
+		SEList[2].enabled = true;
+		SEList[3].enabled = true;
+		SEList[4].enabled = true;
+		SEList[5].enabled = true;
+		SEList[6].enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -36,33 +28,33 @@ public class SEManager : MonoBehaviour {
 	public void Play(Sounds s){
 		switch(s){
 			case Sounds.Bomb:
-				if (BombSound != null)
-					BombSound.Play();
-				Debug.Log("BombSound\n");
+				if (SEList[0] != null)
+				SEList[0].Play();
 				break;
 			case Sounds.Dead:
-				if (DeathSound != null)
-					DeathSound.Play();
+				if (SEList[1] != null)
+				SEList[1].Play();
 				break;
 			case Sounds.EnemyDeath:
-				if (EnemyDeathSound != null)
-					EnemyDeathSound.Play();
+				if (SEList[2] != null)
+				SEList[2].Play();
 				break;
 			case Sounds.Laser:
-				if (LaserSound != null)
-					LaserSound.Play();
+				if (SEList[3] != null)
+				SEList[3].Play();
 				break;
 			case Sounds.LaserAlert:
-				if (LaserAlertSound != null)
-					LaserAlertSound.Play();
+				if (SEList[4] != null)
+				SEList[4].Play();
 				break;
 			case Sounds.PlayerShot:
-				if (PlayerShotSound != null)
-					PlayerShotSound.Play();
+				if (SEList[5] != null)
+				SEList[5].Play();
 				break;
 			case Sounds.Select:
-				if (SelectSound != null)
-					SelectSound.Play();
+				if (SEList[6] != null)
+				SEList[6].Play();
+
 				break;
 			default:
 				break;

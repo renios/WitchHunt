@@ -45,6 +45,10 @@ public class BossAI_1stage : MonoBehaviour {
 	public int pattern2Time = 10;
 	public int pattern3Time = 10;
 
+	// 사운드
+	public GameObject GameSE;
+	SEManager SEPlayer;
+
 	IEnumerator ChangePattern() {
 		pattern = 1;
 		// 특수패턴이 나오지 않는 구간
@@ -79,6 +83,8 @@ public class BossAI_1stage : MonoBehaviour {
 		isStart = false;
 		textManager = FindObjectOfType<TextManager>();
 		boss = GetComponent<Boss>();
+
+		SEPlayer = GameSE.GetComponent<SEManager>();
 	}
 	
 	// Update is called once per frame
@@ -92,7 +98,7 @@ public class BossAI_1stage : MonoBehaviour {
 			// StopCoroutine(patternCoroutine);
 			StopPattern();
 			boss.DestroyAllBullets();
-
+			SEPlayer.Play(SEManager.Sounds.EnemyDeath);
 			textManager.dialogueState = TextManager.DialogueState.After;
 		}
 	}
@@ -127,6 +133,8 @@ public class BossAI_1stage : MonoBehaviour {
 	IEnumerator DefaultShot1() {
 		while (true) {
 		List<GameObject> bullets = new List<GameObject>();
+
+		SEPlayer.Play(SEManager.Sounds.Laser);
 
 		Vector3 deltaVector = (FindObjectOfType<Player>().transform.position - transform.position).normalized;
 		float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;

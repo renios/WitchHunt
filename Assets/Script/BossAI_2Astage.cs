@@ -26,6 +26,10 @@ public class BossAI_2Astage : MonoBehaviour {
 	public float fenceBulletTangent = 40;
 	public float fenceBulletDelay = 1;
 
+	// 사운드
+	public GameObject GameSE;
+	SEManager SEPlayer;
+
 	// 1패턴 - 칼바람
 	void ShotSpread(Vector3 centerPos, bool isRotateClockwise) {
 		List<GameObject> bullets = new List<GameObject>();
@@ -168,6 +172,8 @@ public class BossAI_2Astage : MonoBehaviour {
 		isStart = false;
 		textManager = FindObjectOfType<TextManager>();
 		boss = GetComponent<Boss>();
+
+		SEPlayer = GameSE.GetComponent<SEManager>();
 	}
 	
 	// Update is called once per frame
@@ -181,6 +187,7 @@ public class BossAI_2Astage : MonoBehaviour {
 			StopPattern();
 			boss.DestroyAllBullets();
 
+			SEPlayer.Play(SEManager.Sounds.EnemyDeath);
 			textManager.dialogueState = TextManager.DialogueState.After;
 		}
 	}
