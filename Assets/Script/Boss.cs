@@ -13,7 +13,6 @@ public class Boss : MonoBehaviour {
 	public Coroutine patternCoroutine;
 	TextManager textManager;
 
-	public GameObject GameSE;
 	SEManager SEPlayer;
 
 	// Use this for initialization
@@ -21,7 +20,7 @@ public class Boss : MonoBehaviour {
 		textManager = FindObjectOfType<TextManager>();
 		InitializeBossHp();
 
-		SEPlayer = GameSE.GetComponent<SEManager>();
+		SEPlayer = FindObjectOfType<SEManager>();
 	}
 	
 	// Update is called once per frame

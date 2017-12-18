@@ -44,8 +44,6 @@ public class Player : MonoBehaviour {
 	float noDamagedTime;
 	float damagedDelay = 0.5f;
 
-	// 사운드
-	public GameObject GameSE;
 	SEManager SEPlayer;
 
 	bool IsSlow() {
@@ -139,7 +137,7 @@ public class Player : MonoBehaviour {
 		InitializePlayerHp();
 		InitializePlayerBomb();
 
-		SEPlayer = GameSE.GetComponent<SEManager>();
+		SEPlayer = FindObjectOfType<SEManager>();
 	}
 	
 	// Update is called once per frame

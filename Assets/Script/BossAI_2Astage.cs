@@ -27,7 +27,6 @@ public class BossAI_2Astage : MonoBehaviour {
 	public float fenceBulletDelay = 1;
 
 	// 사운드
-	public GameObject GameSE;
 	SEManager SEPlayer;
 
 	// 1패턴 - 칼바람
@@ -173,7 +172,7 @@ public class BossAI_2Astage : MonoBehaviour {
 		textManager = FindObjectOfType<TextManager>();
 		boss = GetComponent<Boss>();
 
-		SEPlayer = GameSE.GetComponent<SEManager>();
+		SEPlayer = FindObjectOfType<SEManager>();
 	}
 	
 	// Update is called once per frame

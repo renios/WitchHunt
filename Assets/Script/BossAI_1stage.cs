@@ -46,7 +46,6 @@ public class BossAI_1stage : MonoBehaviour {
 	public int pattern3Time = 10;
 
 	// 사운드
-	public GameObject GameSE;
 	SEManager SEPlayer;
 
 	IEnumerator ChangePattern() {
@@ -84,7 +83,7 @@ public class BossAI_1stage : MonoBehaviour {
 		textManager = FindObjectOfType<TextManager>();
 		boss = GetComponent<Boss>();
 
-		SEPlayer = GameSE.GetComponent<SEManager>();
+		SEPlayer = FindObjectOfType<SEManager>();
 	}
 	
 	// Update is called once per frame
