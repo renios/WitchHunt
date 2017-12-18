@@ -30,6 +30,7 @@ public class SEManager : MonoBehaviour {
 			case Sounds.Bomb:
 				if (SEList[0] != null)
 				SEList[0].Play();
+				Debug.Log("Bomb");
 				break;
 			case Sounds.Dead:
 				if (SEList[1] != null)

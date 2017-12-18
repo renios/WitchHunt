@@ -13,9 +13,13 @@ public class Bullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		BulletSound = gameObject.GetComponent<AudioSource>();
-		if (Random.Range(0.0f, 1.0f) < 0.3f)
-			BulletSound.Play();
+		if (this.name == "PlayerBasicBullet")
+		{
+			BulletSound = gameObject.GetComponent<AudioSource>();
+			if (Random.Range(0.0f, 1.0f) < 0.3f)
+				BulletSound.Play();
+		}
+		
 	}
 	
 	// Update is called once per frame
