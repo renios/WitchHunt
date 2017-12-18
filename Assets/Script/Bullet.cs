@@ -12,13 +12,12 @@ public class Bullet : MonoBehaviour {
 	AudioSource BulletSound;
 
 	// Use this for initialization
-	void Start () {
-		if (this.name == "PlayerBasicBullet")
-		{
-			BulletSound = gameObject.GetComponent<AudioSource>();
-			if (Random.Range(0.0f, 1.0f) < 0.3f)
-				BulletSound.Play();
-		}
+	void Awake () {
+		BulletSound = gameObject.GetComponent<AudioSource>();
+		if (BulletSound != null && Random.Range(0.0f, 1.0f) < 0.3f) {
+			BulletSound.Play();
+			Debug.Log("PlayerShot");
+		}	
 		
 	}
 	
