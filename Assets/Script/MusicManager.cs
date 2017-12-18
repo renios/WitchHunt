@@ -46,7 +46,6 @@ public class MusicManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (changeMusic){
-			Debug.Log("Music Change\n");
 			gameMusicOnPlay.GetComponent<AudioSource>().Play();
 			changeMusic = false;
 		}

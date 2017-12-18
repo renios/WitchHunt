@@ -5,7 +5,6 @@ using UnityEngine;
 public class SEManager : MonoBehaviour {
 
 	public enum Sounds {Bomb, Dead, EnemyDeath, Laser, LaserAlert, PlayerShot, Select};
-
 	public List<AudioClip> SEList;
 
 	AudioSource BombSound;
@@ -19,7 +18,7 @@ public class SEManager : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		BombSound.clip = SEList[0];
 		DeathSound.clip = SEList[1];
 		EnemyDeathSound.clip = SEList[2];
@@ -38,6 +37,7 @@ public class SEManager : MonoBehaviour {
 		switch(s){
 			case Sounds.Bomb:
 				BombSound.Play();
+				Debug.Log("BombSound\n");
 				break;
 			case Sounds.Dead:
 				DeathSound.Play();

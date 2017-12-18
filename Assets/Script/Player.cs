@@ -52,8 +52,9 @@ public class Player : MonoBehaviour {
 	void ShotBomb() {
 		currentBomb -= 1;
 		UpdatePlayerBombUI();
+		SEPlayer.Play(SEManager.Sounds.Bomb);
 		if (bombObj == null) {
-			SEPlayer.Play(SEManager.Sounds.Bomb);
+			
 			FindObjectsOfType<Bullet>().ToList().ForEach(bullet => {
 				if (bullet.tag == "EnemyBullet") {
 					bullet.DestroyBullet();
