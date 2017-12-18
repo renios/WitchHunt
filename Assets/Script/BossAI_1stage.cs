@@ -132,32 +132,32 @@ public class BossAI_1stage : MonoBehaviour {
 		float delta = -1 * Mathf.Asin(deltaVector.y) * Mathf.Rad2Deg;
 
 		if (laserCount % 2 != 0) {
-			GameObject midBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-			midBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180);
+			GameObject midBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+			midBullet.transform.rotation *= Quaternion.Euler(delta,-90,0);
 			bullets.Add(midBullet);
 			
 			for (int i = 0; i < laserCount/2; i++) {
-				GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-				GameObject lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-				upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - laserAngle * (i + 1));
-				lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + laserAngle * (i + 1));
+				GameObject upperBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+				GameObject lowerBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+				upperBullet.transform.rotation *= Quaternion.Euler(delta - laserAngle * (i + 1),-90,0);
+				lowerBullet.transform.rotation *= Quaternion.Euler(delta + laserAngle * (i + 1),-90,0);
 				bullets.Add(upperBullet);
 				bullets.Add(lowerBullet);
 			}
 		}
 		else {
-			GameObject upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-			GameObject lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-			upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - laserAngle/2f);
-			lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + laserAngle/2f);
+			GameObject upperBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+			GameObject lowerBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+			upperBullet.transform.rotation *= Quaternion.Euler(delta - laserAngle/2f,-90,0);
+			lowerBullet.transform.rotation *= Quaternion.Euler(delta + laserAngle/2f,-90,0);
 			bullets.Add(upperBullet);
 			bullets.Add(lowerBullet);
 			
 			for (int i = 0; i < laserCount/2; i++) {
-				upperBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-				lowerBullet = Instantiate(laserBullet, transform.position, Quaternion.identity) as GameObject;
-				upperBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 - laserAngle * (i + 0.5f));
-				lowerBullet.transform.rotation *= Quaternion.Euler(0,0,delta + 180 + laserAngle * (i + 0.5f));
+				upperBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+				lowerBullet = Instantiate(laserBullet, transform.position + Vector3.back, Quaternion.identity) as GameObject;
+				upperBullet.transform.rotation *= Quaternion.Euler(delta - laserAngle * (i + 0.5f),-90,0);
+				lowerBullet.transform.rotation *= Quaternion.Euler(delta + laserAngle * (i + 0.5f),-90,0);
 				bullets.Add(upperBullet);
 				bullets.Add(lowerBullet);
 			}

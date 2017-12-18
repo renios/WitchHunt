@@ -15,6 +15,6 @@ public class LaserBullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.localScale += Vector3.right * speed;
+		GetComponent<LaserController>().length += speed;
 	}
 }

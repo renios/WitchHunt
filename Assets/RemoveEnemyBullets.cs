@@ -41,7 +41,7 @@ public class RemoveEnemyBullets : MonoBehaviour {
 
 		enemyBulletColliders.ForEach(coll => {
 			if (coll.tag == "EnemyBullet") {
-				if (coll.GetComponent<LaserBullet>() == null)
+				// if (coll.GetComponent<LaserBullet>() == null)
 					coll.GetComponent<Bullet>().DestroyBullet();
 			}
 		});	

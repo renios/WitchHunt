@@ -81,9 +81,10 @@ public class LaserController : MonoBehaviour {
 
 		if(Physics.Raycast(transform.position, transform.forward, out hit))
 		{
-			Debug.Log (hit.distance);
+			// Debug.Log (hit.distance);
 			if(hit.collider && hit.distance <= length / 10 * OvarAll_Size)
 			{
+				FindObjectOfType<Player>().Damaged();
 				
 				if (laser_add) {
 					var pa1_length = laser_add.GetComponent<ParticleSystemRenderer> ();
