@@ -6,6 +6,7 @@ public class BossAI_2Astage : MonoBehaviour {
 
 	public float preDelay = 1;
 
+	public float pattern1Time = 10;
 	public GameObject spreadBullet;
 	public float spreadBulletSpeed = 3;
 	public int spreadBulletCount = 20;
@@ -28,6 +29,7 @@ public class BossAI_2Astage : MonoBehaviour {
 
 	// 사운드
 	SEManager SEPlayer;
+
 
 	// 1패턴 - 칼바람
 	void ShotSpread(Vector3 centerPos, bool isRotateClockwise) {
@@ -67,11 +69,17 @@ public class BossAI_2Astage : MonoBehaviour {
 	}
 
 	IEnumerator Pattern1() {
+		yield return new WaitForSeconds(spreadBulletPatternDelay/2f);
+
 		while (true) {
-			float xPos = Random.Range(transform.position.x - 3, transform.position.x + 3);
-			float yPos = Random.Range(transform.position.y - 4, transform.position.y + 4);
-			StartCoroutine(ShotTornado(new Vector3(xPos, yPos, 0)));
-			yield return new WaitForSeconds(spreadBulletPatternDelay);
+			for (int i = 0; i < 8; i++) {
+				if (i < 5) {
+					float xPos = Random.Range(transform.position.x - 3, transform.position.x + 3);
+					float yPos = Random.Range(transform.position.y - 4, transform.position.y + 4);
+					StartCoroutine(ShotTornado(new Vector3(xPos, yPos, 0)));
+					yield return new WaitForSeconds(spreadBulletPatternDelay);
+				}
+			}
 		}
 	}
 
@@ -147,16 +155,19 @@ public class BossAI_2Astage : MonoBehaviour {
 		}
 	}
 
-	public bool pattern1;
-	public bool pattern2;
-	public bool pattern3;
+	// public bool pattern1;
+	// public bool pattern2;
+	// public bool pattern3;
 
 	IEnumerator StartPattern() {
 		yield return new WaitForSeconds(preDelay);
 
-		if (pattern1) StartCoroutine(Pattern1());
-		if (pattern2) StartCoroutine(Pattern2());
-		if (pattern3) StartCoroutine(Pattern3());
+		// if (pattern1) StartCoroutine(Pattern1());
+		// if (pattern2) StartCoroutine(Pattern2());
+		// if (pattern3) StartCoroutine(Pattern3());
+		StartCoroutine(Pattern1());
+		StartCoroutine(Pattern2());
+		StartCoroutine(Pattern3());
 	}
 
 	void StopPattern() {
