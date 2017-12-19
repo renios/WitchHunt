@@ -57,6 +57,7 @@ public class TextManager : MonoBehaviour {
 		leftDialogueImage.GetComponentInChildren<Text>().text = "";
 		rightDialogueImage.GetComponentInChildren<Text>().text = "";
 		midNarrationImage.GetComponentInChildren<Text>().text = "";
+		Debug.Log("Dialogue list import: length "+dialogueList.Count);
 
 		if (!(dialogueIndex < dialogueList.Count)) {
 			if (dialogueState == DialogueState.Before) {
