@@ -14,10 +14,12 @@ public class Bullet : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		BulletSound = gameObject.GetComponent<AudioSource>();
-		if (BulletSound != null && Random.Range(0.0f, 1.0f) < 0.3f) {
+		if (BulletSound != null && this.gameObject.tag == "PlayerBullet" && Random.Range(0.0f, 1.0f) < 0.3f) {
 			BulletSound.Play();
-			Debug.Log("PlayerShot");
-		}	
+		}
+		else if (BulletSound != null && this.gameObject.tag == "EnemyBullet"){
+			BulletSound.Play();
+		}
 		
 	}
 	
