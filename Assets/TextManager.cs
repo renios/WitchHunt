@@ -67,6 +67,13 @@ public class TextManager : MonoBehaviour {
 				Player player = FindObjectOfType<Player>();
 				player.shotActive = true;
 				player.moveActive = true;
+
+				if ((SceneManager.GetActiveScene().name == "Stage1-A") ||
+					(SceneManager.GetActiveScene().name == "Stage2-A")) 
+				{
+					Boss boss = FindObjectOfType<Boss>();
+					boss.StartPattern();
+				}
 			}
 			else if (dialogueState == DialogueState.After) {
 				dialogueState = DialogueState.Epilogue;
@@ -126,6 +133,14 @@ public class TextManager : MonoBehaviour {
 				Player player = FindObjectOfType<Player>();
 				player.shotActive = false;
 				player.moveActive = false;
+
+				if ((SceneManager.GetActiveScene().name == "Stage1-A") ||
+					(SceneManager.GetActiveScene().name == "Stage2-A")) 
+				{
+					Boss boss = FindObjectOfType<Boss>();
+					boss.StopPattern();
+				}
+
 				dialogueList = SplitTextToLine(dialogueAfterStageTextFile);
 				dialogueIndex = 0;
 				PrintDialogue(dialogueList);
