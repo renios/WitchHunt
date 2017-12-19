@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
@@ -128,8 +129,15 @@ public class Player : MonoBehaviour {
 		lastShotTime = 0;
 		noDamagedTime = 0;
 		
-		if (trailActive) 
-			InputTrailer.InitializeInputTrailer();
+		if (trailActive) {
+			if (SceneManager.GetActiveScene().name == "Stage1-A") {
+				InputTrailer.InitializeInputTrailer(1);
+			}
+			else if (SceneManager.GetActiveScene().name == "Stage2-A") {
+				InputTrailer.InitializeInputTrailer(2);
+			}
+		}
+			
 
 		playerHpPanel = GameObject.Find("PlayerHpPanel");
 		playerBombPanel = GameObject.Find("PlayerBombPanel");
@@ -146,8 +154,14 @@ public class Player : MonoBehaviour {
 		noDamagedTime += Time.deltaTime;
 
 		currentFrame += 1;
-		if (trailActive)
-			InputTrailer.slowInput.Add(IsSlow());
+		if (trailActive) {
+			if (SceneManager.GetActiveScene().name == "Stage1-A") {
+				InputTrailer.slowInput_1stage.Add(IsSlow());
+			}
+			else if (SceneManager.GetActiveScene().name == "Stage2-A") {
+				InputTrailer.slowInput_2stage.Add(IsSlow());
+			}
+		}
 
 		Move();
 		Shot();
@@ -166,8 +180,14 @@ public class Player : MonoBehaviour {
 
 	void Bomb() {
 		// 실제로 폭탄을 쐈을 때만 true로 입력
-		if (trailActive)
-			InputTrailer.bombInput.Add(Input.GetKeyDown(KeyCode.X) && currentBomb > 0);
+		if (trailActive) {
+			if (SceneManager.GetActiveScene().name == "Stage1-A") {
+				InputTrailer.bombInput_1stage.Add(Input.GetKeyDown(KeyCode.X) && currentBomb > 0);
+			}
+			else if (SceneManager.GetActiveScene().name == "Stage2-A") {
+				InputTrailer.bombInput_2stage.Add(Input.GetKeyDown(KeyCode.X) && currentBomb > 0);
+			}
+		}
 
 		if (!Input.GetKeyDown(KeyCode.X)) return;
 		if (currentBomb <= 0) return; 
@@ -178,9 +198,15 @@ public class Player : MonoBehaviour {
 	}
 
 	void Shot() {
-		if (trailActive)
-			InputTrailer.shotInput.Add(Input.GetKey(KeyCode.Z));
-
+		if (trailActive) {
+			if (SceneManager.GetActiveScene().name == "Stage1-A") {
+				InputTrailer.shotInput_1stage.Add(Input.GetKey(KeyCode.Z));
+			}
+			else if (SceneManager.GetActiveScene().name == "Stage2-A") {
+				InputTrailer.shotInput_2stage.Add(Input.GetKey(KeyCode.Z));
+			}
+		}
+	
 		if (!Input.GetKey(KeyCode.Z)) return;
 		if (lastShotTime < shotDelay) return;
 
@@ -234,8 +260,14 @@ public class Player : MonoBehaviour {
 			inputs.Add(KeyCode.DownArrow);
 		}
 
-		if (trailActive)
-			InputTrailer.moveInput.Add(inputs);
+		if (trailActive) {
+			if (SceneManager.GetActiveScene().name == "Stage1-A") {
+				InputTrailer.moveInput_1stage.Add(inputs);
+			}
+			else if (SceneManager.GetActiveScene().name == "Stage2-A") {
+				InputTrailer.moveInput_2stage.Add(inputs);
+			}
+		}
 	}
 
 	public void Damaged() {

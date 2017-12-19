@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class TextManager : MonoBehaviour {
 
@@ -128,6 +129,13 @@ public class TextManager : MonoBehaviour {
 				dialogueList = SplitTextToLine(dialogueAfterStageTextFile);
 				dialogueIndex = 0;
 				PrintDialogue(dialogueList);
+
+				if (SceneManager.GetActiveScene().name == "Stage1-A") {
+					InputTrailer.Stage1ACleared = true;
+				}
+				else if (SceneManager.GetActiveScene().name == "Stage2-A") {
+					InputTrailer.Stage2ACleared = true;
+				}
 			}
 			else if (Input.GetKeyDown(KeyCode.Z)) {
 				dialogueIndex += 1;
@@ -137,6 +145,12 @@ public class TextManager : MonoBehaviour {
 
 		else if ((dialogueState == DialogueState.Gameover) && !gameoverCanvas.gameObject.activeInHierarchy) {	
 			Invoke("ShowGameoverCanvas", 1f);
+		}
+
+		else if (dialogueState == DialogueState.Epilogue) {
+			if (Input.GetKeyDown(KeyCode.Z)) {
+				SceneManager.LoadScene("StageSelect");
+			}
 		}
 	}
 }
