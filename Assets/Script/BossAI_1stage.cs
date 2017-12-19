@@ -93,7 +93,7 @@ public class BossAI_1stage : MonoBehaviour {
 			isStart = true;
 		}
 
-		if ((boss.currentHp < 10) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
+		if ((boss.currentHp < boss.maxHp/10f) && (textManager.dialogueState == TextManager.DialogueState.Ingame)) {
 			// StopCoroutine(patternCoroutine);
 			StopPattern();
 			boss.DestroyAllBullets();
