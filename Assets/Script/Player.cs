@@ -228,6 +228,8 @@ public class Player : MonoBehaviour {
 		// 대화중에는 못움직임
 		if (!moveActive)
 			speed = 0;
+
+		transform.position += Vector3.right * Time.deltaTime * speed;
 		
 		// shift키 입력시 저속이동
 		if (IsSlow()) 
